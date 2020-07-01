@@ -9,7 +9,9 @@ import { getScaleMethod } from "./numberUtils";
  * @param noOfDataPoints
  * @returns { priceLabels, dateLabels, xGridLines, yGridLines, points, margin }
  */
-export const getGraphConfig = (args: { values: { dateTimeUnix: number; price: number }[] }) => {
+export const getGraphConfig = (args: {
+  values: { unix: number; price: number }[];
+}) => {
   // Determine the base for the config
   const { values } = args;
 
@@ -18,18 +20,14 @@ export const getGraphConfig = (args: { values: { dateTimeUnix: number; price: nu
   const maxPrice = Math.max(...values.map((value) => value.price));
 
   // Calculate min, max date
-  const earliestDate = values[0].dateTimeUnix;
-  const latestDate = values[values.length - 1].dateTimeUnix;
-
-  // Define margin
-  const margin: [number, number] = [GRAPH_MARGIN_X, GRAPH_MARGIN_Y];
+  const earliestDate = values[0].unix;
+  const latestDate = values[values.length - 1].unix;
 
   // Configure x-axis labels
-  const dateLabels = getDateLabels(earliestDate, latestDate);
+  const dateLabels = getDateLabels(values.map(({ unix }) => unix));
 
   // Configure y-axis labels
-  const yConfig = getPriceLabels(minPrice, maxPrice, 4);
-  const { priceLabels } = yConfig;
+  const priceLabels = getPriceLabels(values.map(({ price }) => price));
 
   // Configure x-axis scale helpers
   const unixMin = earliestDate;
@@ -37,30 +35,21 @@ export const getGraphConfig = (args: { values: { dateTimeUnix: number; price: nu
   const scaleUnixX = getScaleMethod(unixMin, unixMax, -1, 1);
 
   // Configure y-axis scale helpers
-  const scalePriceY = getScaleMethod(priceLabels[0], maxPrice, -1, 1);
-
-  // Configure axis grid lines in [-1,1] clip space
-  const xGridLines = dateLabels.map(({ unix }) => scaleUnixX(unix / 1000));
-  const yGridLines = priceLabels.map((label) => scalePriceY(label));
+  const scalePriceY = getScaleMethod(minPrice, maxPrice, -1, 1);
 
   // Calculate point coordinates [-1,1] if these weren't provided
   const points: GraphPoints = values.map((value) => ({
-    x: scaleUnixX(value.dateTimeUnix),
+    x: scaleUnixX(value.unix),
     y: scalePriceY(value.price),
     price: value.price,
-    dateTimeUnix: value.dateTimeUnix,
+    unix: value.unix,
   }));
 
   return {
     priceLabels,
     dateLabels,
-    xGridLines,
-    yGridLines,
     points,
-    margin,
-    minYValue: priceLabels[0],
-    maxYValue: maxPrice,
-    minXValue: points[0].dateTimeUnix,
-    maxXValue: points[points.length - 1].dateTimeUnix,
+    scalePriceY,
+    scaleUnixX,
   };
 };

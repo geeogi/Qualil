@@ -1,6 +1,14 @@
 import dayjs from "dayjs";
-import { ACTIVE_CIRCLE_WIDTH, ACTIVE_LEGEND_WIDTH, SPACING_UNIT } from "../Config/constants";
-import { ACTIVE_CIRCLE, ACTIVE_LEGEND, ACTIVE_LINE } from "./../Config/constants";
+import {
+  ACTIVE_CIRCLE_WIDTH,
+  ACTIVE_LEGEND_WIDTH,
+  SPACING_UNIT,
+} from "../Config/constants";
+import {
+  ACTIVE_CIRCLE,
+  ACTIVE_LEGEND,
+  ACTIVE_LINE,
+} from "./../Config/constants";
 import { GraphPoints } from "./../types";
 import { clamp } from "./numberUtils";
 
@@ -11,9 +19,17 @@ import { clamp } from "./numberUtils";
  * @param margin
  * @param points
  */
-export const positionActiveLegend = (canvasElement: HTMLCanvasElement, activeX: number | undefined, margin: [number, number], points: GraphPoints) => {
+export const positionActiveLegend = (
+  canvasElement: HTMLCanvasElement,
+  activeX: number | undefined,
+  margin: [number, number],
+  points: GraphPoints
+) => {
   // Fetch resolution
-  const resolution: [number, number] = [canvasElement.offsetWidth, canvasElement.offsetHeight];
+  const resolution: [number, number] = [
+    canvasElement.offsetWidth,
+    canvasElement.offsetHeight,
+  ];
   // Calculate graph width and height in px
   const graphWidth = resolution[0] - 2 * margin[0];
   const graphHeight = resolution[1] - 2 * margin[1];
@@ -33,7 +49,9 @@ export const positionActiveLegend = (canvasElement: HTMLCanvasElement, activeX: 
     const scaledActiveX = ((activeX - margin[0]) / graphWidth) * 2 - 1;
 
     // Fetch nearest point to activeX
-    const [{ x, y, dateTimeUnix, price }] = [...points].sort((a, b) => Math.abs(a.x - scaledActiveX) - Math.abs(b.x - scaledActiveX));
+    const [{ x, y, unix, price }] = [...points].sort(
+      (a, b) => Math.abs(a.x - scaledActiveX) - Math.abs(b.x - scaledActiveX)
+    );
 
     // Calculate x for legend in px
     const nearXGraphX = margin[0] + ((x + 1) / 2) * graphWidth;
@@ -52,7 +70,7 @@ export const positionActiveLegend = (canvasElement: HTMLCanvasElement, activeX: 
 
     // Format display variables
     const displayPrice = Math.round(price);
-    const displayDate = dayjs.unix(dateTimeUnix).format("DD MMM YY");
+    const displayDate = dayjs.unix(unix).format("DD MMM YY");
 
     // Update active legend DOM element
     activeLegendElement.style.left = legendX + "px";
