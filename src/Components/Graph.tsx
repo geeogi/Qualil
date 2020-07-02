@@ -1,10 +1,7 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import {
-  PRIMARY_COLOR_2D_CANVAS,
-  PRIMARY_COLOR_ALPHA_2D_CANVAS,
-} from "../Config/colors";
-import { getGraphConfig } from "../Core/getGraphConfig";
+import { PRIMARY_COLOR, PRIMARY_COLOR_ALPHA } from "../Config/colors";
+import { getGraphConfig } from "../Core/graphUtils";
 import { GraphValues } from "../Model/graph";
 import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
 import {
@@ -21,6 +18,7 @@ export const Graph = (props: {
   values: GraphValues;
   width: number;
   height: number;
+  margin: number;
 }) => {
   const {
     points,
@@ -81,13 +79,13 @@ export const Graph = (props: {
     const firstPoint = { canvasX: toCanvasX(0), canvasY: toCanvasY(0) };
     const lastPoint = { canvasX: toCanvasX(graphWidth), canvasY: toCanvasY(0) };
     const path = [firstPoint, ...scaledPoints, lastPoint];
-    const topColor = PRIMARY_COLOR_ALPHA_2D_CANVAS(0.6);
-    const bottomColor = PRIMARY_COLOR_ALPHA_2D_CANVAS(0);
+    const topColor = PRIMARY_COLOR_ALPHA(0.6);
+    const bottomColor = PRIMARY_COLOR_ALPHA(0);
     const gradient = getGradient(topColor, bottomColor);
     fillPath(ctx, path, gradient);
 
     // Draw primary line
-    drawLine(ctx, scaledPoints, PRIMARY_COLOR_2D_CANVAS);
+    drawLine(ctx, scaledPoints, PRIMARY_COLOR);
 
     // Set labels
     setYLabels(
@@ -131,7 +129,7 @@ export const Graph = (props: {
   };
 
   return (
-    <Frame width={props.width} height={props.height}>
+    <Frame width={props.width} height={props.height} margin={props.margin}>
       {xLabels}
       {xGridLines}
       {yLabels}

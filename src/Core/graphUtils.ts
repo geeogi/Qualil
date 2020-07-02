@@ -1,14 +1,7 @@
-import { GRAPH_MARGIN_X, GRAPH_MARGIN_Y } from "../Config/constants";
 import { GraphPoints } from "../Model/graph";
 import { getDateLabels, getPriceLabels } from "./labelUtils";
 import { getScaleMethod } from "./numberUtils";
 
-/**
- * Calculates axis labels, line coordinates and grid line coordinates
- * @param values
- * @param noOfDataPoints
- * @returns { priceLabels, dateLabels, xGridLines, yGridLines, points, margin }
- */
 export const getGraphConfig = (args: {
   values: { unix: number; price: number }[];
 }) => {

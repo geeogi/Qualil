@@ -1,3 +1,8 @@
+/**
+ * Returns a list of prices corresponding to ticks
+ * @param prices
+ * @param ticks
+ */
 export const getPriceLabels = (prices: number[], ticks = [0.25, 0.5, 0.75]) => {
   const sortedPrices = prices.sort((a, b) => a - b);
   const total = sortedPrices.length;
@@ -9,6 +14,11 @@ export const getPriceLabels = (prices: number[], ticks = [0.25, 0.5, 0.75]) => {
   return ticks.map((tick) => Math.round(first + tick * diff));
 };
 
+/**
+ * Returns a list of timestamps corresponding to ticks
+ * @param unixTimestamps
+ * @param ticks
+ */
 export const getDateLabels = (
   unixTimestamps: number[],
   ticks = [0.25, 0.5, 0.75]

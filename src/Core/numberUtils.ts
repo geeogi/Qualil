@@ -1,15 +1,4 @@
 /**
- * Returns the input value if its between min & max,
- * otherwise returns either min or max depending on which is closest
- * @param {*} value
- * @param {*} min
- * @param {*} max
- */
-export const clamp = (value: number, min: number, max: number) => {
-  return value < min ? min : value > max ? max : value;
-};
-
-/**
  * * Returns method which will scale linearly between two value ranges
  * @param {*} minPrimaryValue
  * @param {*} maxPrimaryValue
