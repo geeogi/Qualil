@@ -8,8 +8,8 @@ import {
   ACTIVE_CIRCLE,
   ACTIVE_LEGEND,
   ACTIVE_LINE,
-} from "./../Config/constants";
-import { GraphPoints } from "./../types";
+} from "../Config/constants";
+import { GraphPoints } from "../Model/graph";
 import { clamp } from "./numberUtils";
 
 /**

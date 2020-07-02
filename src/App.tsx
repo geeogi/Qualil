@@ -1,12 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./App.css";
-import { COINGECKO_BASE_URL } from "./Config/constants";
-import { Graph } from "./Graph";
-import { GraphValues } from "./types";
-
-interface COINGECKO_RESPONSE {
-  prices: number[][];
-}
+import { historicalData } from "./API/fetch";
+import { Graph } from "./Components/Graph";
+import { GraphValues } from "./Model/graph";
 
 function App() {
   const [coin, setCoin] = useState("bitcoin");
@@ -14,23 +9,47 @@ function App() {
   const [values, setValues] = useState<GraphValues>();
 
   useEffect(() => {
-    const url = `${COINGECKO_BASE_URL}/coins/${coin}/market_chart?vs_currency=usd&days=${days}`;
-    fetch(url).then(async (response) => {
-      const { prices }: COINGECKO_RESPONSE = await response.json();
-
-      const newValues = prices.map(([unix, price]) => ({
-        unix,
-        price,
-      }));
-
-      setValues(newValues);
+    historicalData(coin, days).then((values) => {
+      setValues(values);
     });
   }, [coin, days]);
 
+  const graphWidth = window.innerWidth / 4;
+  const graphHeight = (9 / 16) * graphWidth;
+
   return (
-    <div className="App">
+    <div style={{ padding: "16px" }}>
       <h1>Quick charts</h1>
-      {values && <Graph values={values} />}
+      <div style={{ display: "flex", flexWrap: "wrap" }}>
+        {values && (
+          <>
+            <div>
+              <h3>Bitcoin</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+            <div>
+              <h3>Ethereum</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+            <div>
+              <h3>XRP</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+            <div>
+              <h3>Binance coin</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+            <div>
+              <h3>Litecoin</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+            <div>
+              <h3>Bitcoin cash</h3>
+              <Graph values={values} width={graphWidth} height={graphHeight} />
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
