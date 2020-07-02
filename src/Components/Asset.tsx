@@ -11,13 +11,12 @@ export const Asset = (props: {
   const latestValue = props.values[props.values.length - 1];
   const latestPrice = Math.round(latestValue.price);
   return (
-    <div>
+    <div style={{ margin: props.margin + "px" }}>
       <h3>Bitcoin {latestPrice} +2.45%</h3>
       <Graph
         values={props.values}
         width={props.graphWidth}
         height={props.graphHeight}
-        margin={props.margin}
       />
     </div>
   );

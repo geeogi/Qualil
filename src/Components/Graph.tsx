@@ -18,7 +18,6 @@ export const Graph = (props: {
   values: GraphValues;
   width: number;
   height: number;
-  margin: number;
 }) => {
   const {
     points,
@@ -129,7 +128,7 @@ export const Graph = (props: {
   };
 
   return (
-    <Frame width={props.width} height={props.height} margin={props.margin}>
+    <Frame width={props.width} height={props.height}>
       {xLabels}
       {xGridLines}
       {yLabels}
