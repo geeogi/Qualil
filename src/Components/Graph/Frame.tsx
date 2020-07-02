@@ -9,7 +9,6 @@ export const Frame = (props: {
     style={{
       position: "relative",
       border: "solid 1px red",
-
       width: props.width + "px",
       height: props.height + "px",
     }}
