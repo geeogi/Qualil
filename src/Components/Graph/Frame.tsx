@@ -1,4 +1,5 @@
 import React from "react";
+import { AXIS_COLOUR } from "../../Config/colors";
 
 export const Frame = (props: {
   children: React.ReactNode;
@@ -8,7 +9,7 @@ export const Frame = (props: {
   <div
     style={{
       position: "relative",
-      border: "solid 1px red",
+      border: `solid 1px ${AXIS_COLOUR}`,
       width: props.width + "px",
       height: props.height + "px",
     }}

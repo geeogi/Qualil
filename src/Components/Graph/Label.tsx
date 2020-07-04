@@ -1,4 +1,5 @@
 import React from "react";
+import { BACKGROUND_COLOR } from "../../Config/colors";
 
 export const Label = (props: { text: string; top: number; left: number }) => (
   <label
@@ -6,7 +7,7 @@ export const Label = (props: { text: string; top: number; left: number }) => (
       position: "absolute",
       top: props.top,
       left: props.left,
-      background: "white",
+      background: BACKGROUND_COLOR,
       padding: 0,
       marginTop: "1px",
     }}
