@@ -1,10 +1,36 @@
-import { COINGECKO_BASE_URL } from "../Config/constants";
+import { COINGECKO_BASE_URL, CURRENCY } from "../Config/constants";
 
-interface COINGECKO_RESPONSE {
+const USE_OFFLINE = true;
+
+interface COINGECKO_GENERAL_RESPONSE {
+  market_data: {
+    current_price: {
+      [currency: string]: number;
+    };
+    price_change_24h_in_currency: {
+      usd: number;
+    };
+  };
+  name: string;
+}
+
+interface COINGECKO_HISTORICAL_RESPONSE {
   prices: number[][];
 }
 
-const MOCK_DATA: COINGECKO_RESPONSE = {
+const MOCK_GENERAL_DATA: COINGECKO_GENERAL_RESPONSE = {
+  market_data: {
+    current_price: {
+      usd: 9108,
+    },
+    price_change_24h_in_currency: {
+      usd: -94.9047106207,
+    },
+  },
+  name: "Bitcoin",
+};
+
+const MOCK_HISTORICAL_DATA: COINGECKO_HISTORICAL_RESPONSE = {
   prices: [
     [1585094400000, 6730.173782371188],
     [1585180800000, 6695.9006183977235],
@@ -111,8 +137,32 @@ const MOCK_DATA: COINGECKO_RESPONSE = {
 };
 
 export const historicalData = async (coin: string, days: number) => {
-  const url = `${COINGECKO_BASE_URL}/coins/${coin}/market_chart?vs_currency=usd&days=${days}`;
-  //   const response = await fetch(url);
-  const { prices }: COINGECKO_RESPONSE = MOCK_DATA; // await response.json();
-  return prices.map(([unix, price]) => ({ unix, price }));
+  if (USE_OFFLINE) {
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(Math.random() * 1500);
+    const { prices }: COINGECKO_HISTORICAL_RESPONSE = MOCK_HISTORICAL_DATA;
+    return prices.map(([unix, price]) => ({ unix, price }));
+  } else {
+    const url = `${COINGECKO_BASE_URL}/coins/${coin}/market_chart?vs_currency=${CURRENCY}&days=${days}`;
+    const response = await fetch(url);
+    const { prices }: COINGECKO_HISTORICAL_RESPONSE = await response.json();
+    return prices.map(([unix, price]) => ({ unix, price }));
+  }
+};
+
+export const generalData = async (coin: string) => {
+  if (USE_OFFLINE) {
+    const delay = (ms: number) => new Promise((res) => setTimeout(res, ms));
+    await delay(Math.random() * 1500);
+    const { name, market_data }: COINGECKO_GENERAL_RESPONSE = MOCK_GENERAL_DATA;
+    return { name, market_data };
+  } else {
+    const url = `${COINGECKO_BASE_URL}/coins/${coin}`;
+    const response = await fetch(url);
+    const {
+      name,
+      market_data,
+    }: COINGECKO_GENERAL_RESPONSE = await response.json();
+    return { name, market_data };
+  }
 };

@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import React, { useState } from "react";
-import { PRIMARY_COLOR, PRIMARY_COLOR_ALPHA } from "../Config/colors";
+import { POSITIVE_COLOR, POSITIVE_COLOR_ALPHA } from "../Config/colors";
 import { getGraphConfig } from "../Core/graphUtils";
 import { GraphValues } from "../Model/graph";
 import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
@@ -15,27 +15,29 @@ import { Label } from "./Graph/Label";
 import { VerticalGridLine } from "./Graph/VerticalGridLine";
 
 export const Graph = (props: {
-  values: GraphValues;
+  values?: GraphValues;
   width: number;
   height: number;
 }) => {
-  const {
-    points,
-    dateLabels,
-    priceLabels,
-    scalePriceY,
-    scaleUnixX,
-  } = getGraphConfig(props);
-
   const [xLabels, setXLabels] = useState<JSX.Element[]>();
   const [yLabels, setYLabels] = useState<JSX.Element[]>();
   const [xGridLines, setXGridLines] = useState<JSX.Element[]>();
   const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
 
   const onRender = (canvasElement: HTMLCanvasElement) => {
-    if (!canvasElement || (xLabels && yLabels)) {
+    if (!canvasElement || (xLabels && yLabels) || !props.values) {
       return;
     }
+
+    const { values } = props;
+
+    const {
+      points,
+      dateLabels,
+      priceLabels,
+      scalePriceY,
+      scaleUnixX,
+    } = getGraphConfig({ values });
 
     // Retrieve canvas context
     const ctx = canvasElement.getContext("2d");
@@ -78,13 +80,13 @@ export const Graph = (props: {
     const firstPoint = { canvasX: toCanvasX(0), canvasY: toCanvasY(0) };
     const lastPoint = { canvasX: toCanvasX(graphWidth), canvasY: toCanvasY(0) };
     const path = [firstPoint, ...scaledPoints, lastPoint];
-    const topColor = PRIMARY_COLOR_ALPHA(0.6);
-    const bottomColor = PRIMARY_COLOR_ALPHA(0);
+    const topColor = POSITIVE_COLOR_ALPHA(0.6);
+    const bottomColor = POSITIVE_COLOR_ALPHA(0);
     const gradient = getGradient(topColor, bottomColor);
     fillPath(ctx, path, gradient);
 
     // Draw primary line
-    drawLine(ctx, scaledPoints, PRIMARY_COLOR);
+    drawLine(ctx, scaledPoints, POSITIVE_COLOR);
 
     // Set labels
     setYLabels(
