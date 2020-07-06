@@ -9,6 +9,7 @@ export const VerticalGridLine = (props: { left: number }) => (
       width: "1px",
       position: "absolute",
       left: props.left,
+      zIndex: -1,
     }}
   ></div>
 );

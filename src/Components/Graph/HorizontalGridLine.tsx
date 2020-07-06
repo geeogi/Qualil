@@ -9,6 +9,7 @@ export const HorizontalGridLine = (props: { top: number }) => (
       height: "1px",
       position: "absolute",
       top: props.top,
+      zIndex: -1,
     }}
   ></div>
 );

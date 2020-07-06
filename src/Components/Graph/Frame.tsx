@@ -2,7 +2,7 @@ import React from "react";
 import { AXIS_COLOUR } from "../../Config/colors";
 
 export const Frame = (props: {
-  children: React.ReactNode;
+  children?: React.ReactNode;
   width: number;
   height: number;
 }) => (

@@ -1,6 +1,6 @@
 import { COINGECKO_BASE_URL, CURRENCY } from "../Config/constants";
 
-const USE_OFFLINE = true;
+const USE_OFFLINE = false;
 
 interface COINGECKO_GENERAL_RESPONSE {
   market_data: {

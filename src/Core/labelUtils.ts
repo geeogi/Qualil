@@ -11,7 +11,7 @@ export const getPriceLabels = (prices: number[], ticks = [0.25, 0.5, 0.75]) => {
   const last = sortedPrices[total - 1];
   const diff = last - first;
 
-  return ticks.map((tick) => Math.round(first + tick * diff));
+  return ticks.map((tick) => parseFloat((first + tick * diff).toPrecision(5)));
 };
 
 /**

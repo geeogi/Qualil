@@ -1,27 +1,18 @@
 export const COLORS = {
   POSITIVE: {
-    COLOR: "rgb(0, 255, 0)",
+    COLOR: "rgb(0, 158, 115)",
     COLOR_ALPHA: (opacity: number) => {
-      return `rgba(0, 255, 0, ${opacity})`;
+      return `rgba(0, 158, 115, ${opacity})`;
     },
   },
   NEGATIVE: {
-    COLOR: "rgb(255, 0, 0)",
+    COLOR: "rgb(217, 64, 64)",
     COLOR_ALPHA: (opacity: number) => {
-      return `rgba(255, 0, 0, ${opacity})`;
+      return `rgba(217, 64, 64, ${opacity})`;
     },
   },
 };
 
-export const POSITIVE_COLOR = "rgb(0, 255, 0)";
-export const POSITIVE_COLOR_ALPHA = (opacity: number) => {
-  return `rgba(0, 255, 0, ${opacity})`;
-};
-export const NEGATIVE_COLOR = "rgb(255, 0, 0)";
-export const NEGATIVE_COLOR_ALPHA = (opacity: number) => {
-  return `rgba(255, 0, 0, ${opacity})`;
-};
-
-export const BACKGROUND_COLOR = "black";
-export const CONTRAST_COLOUR = "white";
-export const AXIS_COLOUR = "#555";
+export const BACKGROUND_COLOR = "white";
+export const CONTRAST_COLOUR = "black";
+export const AXIS_COLOUR = "#e6e6e6";
