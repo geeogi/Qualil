@@ -20,6 +20,10 @@ canvas {
   z-index: 1;
 }
 
+p {
+  font-size: 13px;
+}
+
 * {
   box-sizing: border-box;
 }

@@ -16,3 +16,4 @@ export const COLORS = {
 export const BACKGROUND_COLOR = "white";
 export const CONTRAST_COLOUR = "black";
 export const AXIS_COLOUR = "#e6e6e6";
+export const ATTRIBUTE_COLOUR = "#666";

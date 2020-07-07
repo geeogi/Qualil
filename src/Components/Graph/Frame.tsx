@@ -10,9 +10,9 @@ export const Frame = (props: {
   <div
     style={{
       position: "relative",
-      border: `solid 1px ${AXIS_COLOUR}`,
       width: props.width + "px",
       height: props.height + "px",
+      marginBottom: "24px",
     }}
   >
     {props.loading ? "loading..." : props.children}

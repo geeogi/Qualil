@@ -11,6 +11,15 @@ export interface COINGECKO_COIN_INFO {
     market_cap: {
       [currency: string]: number;
     };
+    ath: {
+      [currency: string]: number;
+    };
+    atl: {
+      [currency: string]: number;
+    };
+    total_volume: {
+      [currency: string]: number;
+    };
   };
   image: {
     thumb: string;

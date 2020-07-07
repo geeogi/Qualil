@@ -8,7 +8,7 @@ export const Label = (props: { text: string; top: number; left: number }) => (
       top: props.top,
       left: props.left,
       background: BACKGROUND_COLOR,
-      padding: 0,
+      padding: "1px",
       marginTop: "1px",
     }}
   >

@@ -3,6 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
 import { Change } from "../Config/constants";
 import { getGraphConfig } from "../Core/graphUtils";
+import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { GraphValues } from "../Model/graph";
 import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
 import {
@@ -70,7 +71,7 @@ export const Graph = (props: {
 
     // Utils to convert from clip space [-1,1] to graph coordinates
     const toGraphX = (x: number) => ((x + 1) / 2) * graphWidth;
-    const toGraphY = (y: number) => ((y + 1) / 2) * graphDepth;
+    const toGraphY = (y: number) => ((y + 1) / 2.1) * graphDepth;
 
     // Utils to convert from graph coordinates to canvas pixels
     const toCanvasX = (graphX: number) => graphX;
@@ -102,7 +103,7 @@ export const Graph = (props: {
       priceLabels.map((price) => (
         <Label
           key={`${name}-${price.toString()}`}
-          text={price.toFixed(3).toString()}
+          text={numberWithSignificantDigits(price).toString()}
           top={toCanvasY(toGraphY(scalePriceY(price)))}
           left={0}
         />

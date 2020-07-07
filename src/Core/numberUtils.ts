@@ -21,6 +21,14 @@ export const getScaleMethod = (
   };
 };
 
-export function numberWithCommas(x: number) {
-  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+export const numberWithCommas = (x: number) => {
+  if (x > 1000) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  } else {
+    return x;
+  }
+};
+
+export const numberWithSignificantDigits = (x: number) => {
+  return x.toPrecision(4);
+};

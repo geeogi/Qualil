@@ -7,6 +7,7 @@ import {
 import { Change } from "../Config/constants";
 import { numberWithCommas } from "../Core/numberUtils";
 import { GraphValues } from "../Model/graph";
+import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
 
@@ -43,6 +44,9 @@ export const Asset = (props: {
   const name = info.name;
   const image = info.image.thumb;
   const marketCap = info.market_data.market_cap["usd"];
+  const ath = info.market_data.ath["usd"];
+  const atl = info.market_data.atl["usd"];
+  const totalVolume = info.market_data.total_volume["usd"];
 
   return (
     <div style={{ margin: margin + "px" }}>
@@ -60,7 +64,32 @@ export const Asset = (props: {
         change={dailyChange >= 0 ? Change.POSITIVE : Change.NEGATIVE}
         loading={isLoading}
       />
-      <p>Mkt Cap: ${numberWithCommas(marketCap)}</p>
+      <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth }}>
+        <div style={{ width: `${graphWidth / 2}px` }}>
+          <Attribute
+            attrib="Mkt cap"
+            value={`$${numberWithCommas(marketCap)}`}
+          />
+        </div>
+        <div style={{ width: `${graphWidth / 2}px` }}>
+          <Attribute
+            attrib="All-time high"
+            value={`$${numberWithCommas(ath)}`}
+          />
+        </div>
+        <div style={{ width: `${graphWidth / 2}px` }}>
+          <Attribute
+            attrib="All-time low"
+            value={`$${numberWithCommas(atl)}`}
+          />
+        </div>
+        <div style={{ width: `${graphWidth / 2}px` }}>
+          <Attribute
+            attrib="Volume"
+            value={`$${numberWithCommas(totalVolume)}`}
+          />
+        </div>
+      </div>
     </div>
   );
 };

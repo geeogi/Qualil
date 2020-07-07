@@ -22,7 +22,7 @@ export const Title = (props: {
       <img src={image} style={{ padding: "4px" }}></img>
       <h3>
         <span>
-          {name} {currentPrice}{" "}
+          {name} ${currentPrice}{" "}
           <span style={{ color }}>
             {sign}
             {dailyChangePercent}%
