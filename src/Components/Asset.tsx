@@ -5,7 +5,7 @@ import {
   getCoinInfo,
 } from "../API/fetch";
 import { Change } from "../Config/constants";
-import { numberWithCommas } from "../Core/numberUtils";
+import { numberToString } from "../Core/numberUtils";
 import { GraphValues } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
@@ -68,25 +68,25 @@ export const Asset = (props: {
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute
             attrib="Mkt cap"
-            value={`$${numberWithCommas(marketCap)}`}
+            value={`$${numberToString(marketCap)}`}
           />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute
             attrib="All-time high"
-            value={`$${numberWithCommas(ath)}`}
+            value={`$${numberToString(ath)}`}
           />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute
             attrib="All-time low"
-            value={`$${numberWithCommas(atl)}`}
+            value={`$${numberToString(atl)}`}
           />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute
             attrib="Volume"
-            value={`$${numberWithCommas(totalVolume)}`}
+            value={`$${numberToString(totalVolume)}`}
           />
         </div>
       </div>

@@ -103,7 +103,7 @@ export const Graph = (props: {
       priceLabels.map((price) => (
         <Label
           key={`${name}-${price.toString()}`}
-          text={numberWithSignificantDigits(price).toString()}
+          text={numberWithSignificantDigits(price)}
           top={toCanvasY(toGraphY(scalePriceY(price)))}
           left={0}
         />
