@@ -26,12 +26,33 @@ function App() {
   return (
     <div style={{ padding: CONTAINER_PADDING + "px" }}>
       <h1>CoinTales</h1>
-      <select onChange={(e) => setDays(parseInt(e.target.value))}>
-        <option value="7">1w</option>
-        <option value="30">1m</option>
-        <option value="365">1y</option>
-        <option value="1825">5y</option>
-      </select>
+      {[
+        {
+          value: 7,
+          title: "1w",
+        },
+        {
+          value: 30,
+          title: "1m",
+        },
+        {
+          value: 365,
+          title: "1y",
+        },
+        {
+          value: 1825,
+          title: "5y",
+        },
+      ].map((option) => (
+        <button
+          style={{ margin: "2px" }}
+          onClick={() => setDays(option.value)}
+          disabled={days === option.value}
+        >
+          {" "}
+          {option.title}
+        </button>
+      ))}
       <div
         style={{
           display: "flex",
