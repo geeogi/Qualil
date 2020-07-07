@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { generalData, historicalData } from "../API/fetch";
-import { Change, CURRENCY } from "../Config/constants";
+import {
+  COINGECKO_COIN_INFO,
+  getCoinHistoricalData,
+  getCoinInfo,
+} from "../API/fetch";
+import { Change } from "../Config/constants";
+import { numberWithCommas } from "../Core/numberUtils";
 import { GraphValues } from "../Model/graph";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -13,31 +18,37 @@ export const Asset = (props: {
   days: number;
 }) => {
   const [values, setValues] = useState<GraphValues>();
-  const [name, setName] = useState<string>();
-  const [currentPrice, setCurrentPrice] = useState<number>();
-  const [dailyChange, setDailyChange] = useState<number>();
+  const [info, setInfo] = useState<COINGECKO_COIN_INFO>();
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { coin, days, graphWidth, graphHeight, margin } = props;
 
   useEffect(() => {
-    Promise.all([generalData(coin), historicalData(coin, days)]).then(
-      ([{ name, market_data }, values]) => {
+    setIsLoading(true);
+    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, days)]).then(
+      ([info, values]) => {
         setValues(values);
-        setName(name);
-        setCurrentPrice(market_data.current_price[CURRENCY]);
-        setDailyChange(market_data.price_change_24h_in_currency[CURRENCY]);
+        setInfo(info);
+        setIsLoading(false);
       }
     );
   }, [coin, days]);
 
-  if (!currentPrice || !dailyChange || !name) {
+  if (!info) {
     return <div />;
   }
+
+  const currentPrice = info.market_data.current_price["usd"];
+  const dailyChange = info.market_data.price_change_24h_in_currency["usd"];
+  const name = info.name;
+  const image = info.image.thumb;
+  const marketCap = info.market_data.market_cap["usd"];
 
   return (
     <div style={{ margin: margin + "px" }}>
       <Title
         name={name}
+        image={image}
         dailyChange={dailyChange}
         currentPrice={currentPrice}
       />
@@ -47,7 +58,9 @@ export const Asset = (props: {
         width={graphWidth}
         height={graphHeight}
         change={dailyChange >= 0 ? Change.POSITIVE : Change.NEGATIVE}
+        loading={isLoading}
       />
+      <p>Mkt Cap: ${numberWithCommas(marketCap)}</p>
     </div>
   );
 };

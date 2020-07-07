@@ -17,6 +17,7 @@ import { VerticalGridLine } from "./Graph/VerticalGridLine";
 
 export const Graph = (props: {
   values?: GraphValues;
+  loading?: boolean;
   width: number;
   height: number;
   change: Change;
@@ -28,7 +29,7 @@ export const Graph = (props: {
   const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { values, change, name } = props;
+  const { values, change, name, loading, width, height } = props;
 
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -101,7 +102,7 @@ export const Graph = (props: {
       priceLabels.map((price) => (
         <Label
           key={`${name}-${price.toString()}`}
-          text={price.toString()}
+          text={price.toFixed(3).toString()}
           top={toCanvasY(toGraphY(scalePriceY(price)))}
           left={0}
         />
@@ -135,10 +136,10 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values]);
+  }, [values, loading]);
 
   return (
-    <Frame width={props.width} height={props.height}>
+    <Frame width={width} height={height} loading={loading}>
       {xLabels}
       {xGridLines}
       {yLabels}

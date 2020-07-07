@@ -3,6 +3,7 @@ import { AXIS_COLOUR } from "../../Config/colors";
 
 export const Frame = (props: {
   children?: React.ReactNode;
+  loading?: boolean;
   width: number;
   height: number;
 }) => (
@@ -14,6 +15,6 @@ export const Frame = (props: {
       height: props.height + "px",
     }}
   >
-    {props.children}
+    {props.loading ? "loading..." : props.children}
   </div>
 );

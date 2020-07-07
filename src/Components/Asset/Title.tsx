@@ -3,10 +3,11 @@ import { COLORS } from "../../Config/colors";
 
 export const Title = (props: {
   name: string;
+  image: string;
   currentPrice: number;
   dailyChange: number;
 }) => {
-  const { name, currentPrice, dailyChange } = props;
+  const { name, image, currentPrice, dailyChange } = props;
 
   const price24HoursAgo = currentPrice + dailyChange;
   const dailyChangeDivision = Math.abs(dailyChange / price24HoursAgo);
@@ -17,14 +18,17 @@ export const Title = (props: {
   const sign = dailyChange >= 0 ? "+" : "-";
 
   return (
-    <h3>
-      <span>
-        {name} {currentPrice}{" "}
-        <span style={{ color }}>
-          {sign}
-          {dailyChangePercent}%
+    <div style={{ display: "flex", alignItems: "center" }}>
+      <img src={image} style={{ padding: "4px" }}></img>
+      <h3>
+        <span>
+          {name} {currentPrice}{" "}
+          <span style={{ color }}>
+            {sign}
+            {dailyChangePercent}%
+          </span>
         </span>
-      </span>
-    </h3>
+      </h3>
+    </div>
   );
 };

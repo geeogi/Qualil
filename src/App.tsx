@@ -9,7 +9,10 @@ const COINS = [
   "tether",
   "ripple",
   "bitcoin-cash",
+  "bitcoin-cash-sv",
+  "litecoin",
   "cardano",
+  "binancecoin",
 ];
 
 function App() {

@@ -3,15 +3,18 @@
  * @param prices
  * @param ticks
  */
-export const getPriceLabels = (prices: number[], ticks = [0.25, 0.5, 0.75]) => {
+export const getPriceLabels = (
+  prices: number[],
+  ticks = [0.25, 0.5, 0.75, 1]
+) => {
   const sortedPrices = prices.sort((a, b) => a - b);
   const total = sortedPrices.length;
 
-  const first = sortedPrices[0];
-  const last = sortedPrices[total - 1];
-  const diff = last - first;
+  const min = sortedPrices[0];
+  const max = sortedPrices[total - 1];
+  const diff = max - min;
 
-  return ticks.map((tick) => parseFloat((first + tick * diff).toPrecision(5)));
+  return ticks.map((tick) => min + tick * diff);
 };
 
 /**
