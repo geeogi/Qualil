@@ -1,3 +1,6 @@
+import { UNIX_HOUR } from "../Config/constants";
+import { roundToNearest } from "./numberUtils";
+
 /**
  * Returns a list of prices corresponding to ticks
  * @param prices
@@ -27,5 +30,7 @@ export const getDateLabels = (
   ticks = [0.25, 0.5, 0.75]
 ) => {
   const total = unixTimestamps.length;
-  return ticks.map((tick) => unixTimestamps[Math.round(tick * total)]);
+  return ticks.map((tick) =>
+    roundToNearest(unixTimestamps[Math.round(tick * total)], UNIX_HOUR)
+  );
 };

@@ -18,6 +18,10 @@ const COINS = [
 ];
 const periods = [
   {
+    value: 1,
+    title: "1d",
+  },
+  {
     value: 7,
     title: "1w",
   },

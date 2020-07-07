@@ -30,7 +30,7 @@ export const getGraphConfig = (args: {
   // Configure y-axis scale helpers
   const scalePriceY = getScaleMethod(minPrice, maxPrice, -1, 1);
 
-  // Calculate point coordinates [-1,1] if these weren't provided
+  // Calculate point coordinates [-1,1]
   const points: GraphPoints = values.map((value) => ({
     x: scaleUnixX(value.unix),
     y: scalePriceY(value.price),

@@ -28,3 +28,7 @@ export const numberToString = (x: number) => {
 export const numberWithSignificantDigits = (x: number) => {
   return parseFloat(x.toPrecision(4)).toLocaleString();
 };
+
+export const roundToNearest = (num: number, multiple: number) => {
+  return Math.round(num / multiple) * multiple;
+};

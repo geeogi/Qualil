@@ -1,9 +1,10 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
-import { Change } from "../Config/constants";
+import { UNIX_DAY } from "../Config/constants";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
+import { ChangeSince24H } from "../Model/coin";
 import { GraphValues } from "../Model/graph";
 import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
 import {
@@ -21,7 +22,7 @@ export const Graph = (props: {
   loading?: boolean;
   width: number;
   height: number;
-  change: Change;
+  change: ChangeSince24H;
   name: string;
 }) => {
   const [xLabels, setXLabels] = useState<JSX.Element[]>();
@@ -32,6 +33,9 @@ export const Graph = (props: {
 
   const { values, change, name, loading, width, height } = props;
 
+  /**
+   * Draws graph when canvas loads and whenever `values` changes
+   */
   useEffect(() => {
     const canvasElement = canvasRef.current;
 
@@ -109,11 +113,12 @@ export const Graph = (props: {
         />
       ))
     );
+    const format = dateLabels[1] - dateLabels[0] > UNIX_DAY ? "D MMM" : "HH:mm";
     setXLabels(
       dateLabels.map((unix) => (
         <Label
           key={`${name}-${unix}`}
-          text={dayjs(unix).format("D MMM")}
+          text={dayjs(unix).format(format)}
           top={graphDepth}
           left={toCanvasX(toGraphX(scaleUnixX(unix)))}
         />
@@ -137,7 +142,7 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading]);
+  }, [values, loading, canvasRef]);
 
   return (
     <Frame width={width} height={height} loading={loading}>

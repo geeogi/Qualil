@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from "react";
-import {
-  COINGECKO_COIN_INFO,
-  getCoinHistoricalData,
-  getCoinInfo,
-} from "../API/fetch";
-import { Change } from "../Config/constants";
+import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
+import { ChangeSince24H, CoinInfo } from "../Model/coin";
 import { GraphValues } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
@@ -19,11 +15,14 @@ export const Asset = (props: {
   days: number;
 }) => {
   const [values, setValues] = useState<GraphValues>();
-  const [info, setInfo] = useState<COINGECKO_COIN_INFO>();
+  const [info, setInfo] = useState<CoinInfo>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const { coin, days, graphWidth, graphHeight, margin } = props;
 
+  /**
+   * Fetches and sets coin data on load and whenever `days` changes
+   */
   useEffect(() => {
     setIsLoading(true);
     Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, days)]).then(
@@ -61,7 +60,7 @@ export const Asset = (props: {
         values={values}
         width={graphWidth}
         height={graphHeight}
-        change={dailyChange >= 0 ? Change.POSITIVE : Change.NEGATIVE}
+        change={dailyChange >= 0 ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE}
         loading={isLoading}
       />
       <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth }}>
