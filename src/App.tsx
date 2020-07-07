@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Asset } from "./Components/Asset";
+import { Button } from "./Components/Button";
+import { ATTRIBUTE_COLOUR } from "./Config/colors";
 
 const CONTAINER_PADDING = 16;
 const GRAPH_MARGIN = 16;
@@ -14,6 +16,28 @@ const COINS = [
   "cardano",
   "binancecoin",
 ];
+const periods = [
+  {
+    value: 7,
+    title: "1w",
+  },
+  {
+    value: 30,
+    title: "1m",
+  },
+  {
+    value: 90,
+    title: "3m",
+  },
+  {
+    value: 365,
+    title: "1y",
+  },
+  {
+    value: 1825,
+    title: "5y",
+  },
+];
 
 function App() {
   const [days, setDays] = useState(7);
@@ -25,35 +49,19 @@ function App() {
 
   return (
     <div style={{ padding: CONTAINER_PADDING + "px" }}>
-      <h1>CoinTales</h1>
-      {[
-        {
-          value: 7,
-          title: "1w",
-        },
-        {
-          value: 30,
-          title: "1m",
-        },
-        {
-          value: 365,
-          title: "1y",
-        },
-        {
-          value: 1825,
-          title: "5y",
-        },
-      ].map((option) => (
-        <button
-          style={{ margin: "2px" }}
+      <h1 style={{ margin: 0 }}>CoinTales</h1>
+      <p style={{ margin: "0px 0px 16px 0px", color: ATTRIBUTE_COLOUR }}>
+        Powered by CoinGecko
+      </p>
+      {periods.map((option) => (
+        <Button
           onClick={() => setDays(option.value)}
           disabled={days === option.value}
         >
-          {" "}
           {option.title}
-        </button>
+        </Button>
       ))}
-      <div
+      <main
         style={{
           display: "flex",
           flexWrap: "wrap",
@@ -70,7 +78,8 @@ function App() {
             days={days}
           />
         ))}
-      </div>
+      </main>
+      <footer>© 2020 CoinTales</footer>
     </div>
   );
 }

@@ -26,5 +26,5 @@ export const numberToString = (x: number) => {
 };
 
 export const numberWithSignificantDigits = (x: number) => {
-  return x.toPrecision(4).toLocaleString();
+  return parseFloat(x.toPrecision(4)).toLocaleString();
 };

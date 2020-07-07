@@ -42,7 +42,7 @@ export const Asset = (props: {
   const currentPrice = info.market_data.current_price["usd"];
   const dailyChange = info.market_data.price_change_24h_in_currency["usd"];
   const name = info.name;
-  const image = info.image.thumb;
+  const image = info.image.small;
   const marketCap = info.market_data.market_cap["usd"];
   const ath = info.market_data.ath["usd"];
   const atl = info.market_data.atl["usd"];
@@ -66,28 +66,16 @@ export const Asset = (props: {
       />
       <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth }}>
         <div style={{ width: `${graphWidth / 2}px` }}>
-          <Attribute
-            attrib="Mkt cap"
-            value={`$${numberToString(marketCap)}`}
-          />
+          <Attribute attrib="Mkt cap" value={`$${numberToString(marketCap)}`} />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
-          <Attribute
-            attrib="All-time high"
-            value={`$${numberToString(ath)}`}
-          />
+          <Attribute attrib="ATH" value={`$${numberToString(ath)}`} />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
-          <Attribute
-            attrib="All-time low"
-            value={`$${numberToString(atl)}`}
-          />
+          <Attribute attrib="ATL" value={`$${numberToString(atl)}`} />
         </div>
         <div style={{ width: `${graphWidth / 2}px` }}>
-          <Attribute
-            attrib="Volume"
-            value={`$${numberToString(totalVolume)}`}
-          />
+          <Attribute attrib="Vol" value={`$${numberToString(totalVolume)}`} />
         </div>
       </div>
     </div>

@@ -19,7 +19,12 @@ export const Title = (props: {
 
   return (
     <div style={{ display: "flex", alignItems: "center" }}>
-      <img src={image} style={{ padding: "4px" }}></img>
+      <img
+        src={image}
+        style={{ padding: "4px" }}
+        width="33px"
+        height="33px"
+      ></img>
       <h3>
         <span>
           {name} ${currentPrice}{" "}

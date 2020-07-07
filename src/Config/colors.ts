@@ -13,7 +13,16 @@ export const COLORS = {
   },
 };
 
-export const BACKGROUND_COLOR = "white";
-export const CONTRAST_COLOUR = "black";
-export const AXIS_COLOUR = "#e6e6e6";
-export const ATTRIBUTE_COLOUR = "#666";
+// export const BACKGROUND_COLOR = "white";
+// export const CONTRAST_COLOUR = "black";
+// export const AXIS_COLOUR = "#e6e6e6";
+// export const ATTRIBUTE_COLOUR = "#666";
+
+/**
+ * Fetch CSS variables from the Document
+ */
+const style = getComputedStyle(document.documentElement);
+export const BACKGROUND_COLOR = style.getPropertyValue("--background-color");
+export const CONTRAST_COLOUR = style.getPropertyValue("--contrast-color");
+export const ATTRIBUTE_COLOUR = style.getPropertyValue("--attribute-color");
+export const AXIS_COLOUR = style.getPropertyValue("--axis-color");

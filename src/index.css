@@ -1,3 +1,10 @@
+:root {
+  --background-color: #111;
+  --contrast-color: white;
+  --axis-color: #333;
+  --attribute-color: #999;
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -5,8 +12,8 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: white;
-  color: black;
+  background-color: var(--background-color);
+  color: var(--contrast-color);
 }
 
 code {
@@ -22,6 +29,19 @@ canvas {
 
 p {
   font-size: 13px;
+}
+
+button {
+  background-color: var(--axis-color);
+  border: none;
+  border-radius: 3px;
+  color: var(--contrast-color);
+  min-width: 40px;
+}
+
+button:disabled {
+  background-color: var(--attribute-color);
+  color: var(--background-color);
 }
 
 * {

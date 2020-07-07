@@ -22,7 +22,7 @@ export interface COINGECKO_COIN_INFO {
     };
   };
   image: {
-    thumb: string;
+    small: string;
   };
   name: string;
 }
