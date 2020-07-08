@@ -1,3 +1,10 @@
+/* :root {
+  --background-color: white;
+  --contrast-color: #111;
+  --axis-color: #e3e3e3;
+  --attribute-color: #333;
+} */
+
 :root {
   --background-color: #111;
   --contrast-color: white;
