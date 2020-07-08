@@ -37,6 +37,7 @@ button {
   border-radius: 3px;
   color: var(--contrast-color);
   min-width: 40px;
+  min-height: 24px;
 }
 
 button:disabled {
