@@ -66,7 +66,7 @@ export const Asset = (props: {
         }
         loading={isLoading}
       />
-      <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth }}>
+      <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth, margin: "8px 0" }}>
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute attrib="Mkt cap" value={`$${numberToString(marketCap)}`} />
         </div>

@@ -145,12 +145,14 @@ export const Graph = (props: {
   }, [values, loading, canvasRef, change, name]);
 
   return (
-    <Frame width={width} height={height} loading={loading}>
+    <div style={{ position: "relative", height: height + 24 }}>
+      <Frame width={width} height={height} loading={loading}>
+        {xGridLines}
+        {yGridLines}
+        {yLabels}
+        <canvas ref={canvasRef}></canvas>
+      </Frame>
       {xLabels}
-      {xGridLines}
-      {yLabels}
-      {yGridLines}
-      <canvas ref={canvasRef}></canvas>
-    </Frame>
+    </div>
   );
 };
