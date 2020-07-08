@@ -21,6 +21,7 @@ export const Title = (props: {
     <div style={{ display: "flex", alignItems: "center" }}>
       <img
         src={image}
+        alt={name}
         style={{ padding: "4px" }}
         width="33px"
         height="33px"
