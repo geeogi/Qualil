@@ -142,7 +142,7 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading, canvasRef]);
+  }, [values, loading, canvasRef, change, name]);
 
   return (
     <Frame width={width} height={height} loading={loading}>
