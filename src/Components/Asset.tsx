@@ -25,13 +25,14 @@ export const Asset = (props: {
    */
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, days)]).then(
-      ([info, values]) => {
+    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, days)])
+      .then(([info, values]) => {
         setValues(values);
         setInfo(info);
+      })
+      .finally(() => {
         setIsLoading(false);
-      }
-    );
+      });
   }, [coin, days]);
 
   if (!info) {
@@ -60,7 +61,9 @@ export const Asset = (props: {
         values={values}
         width={graphWidth}
         height={graphHeight}
-        change={dailyChange >= 0 ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE}
+        change={
+          dailyChange >= 0 ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
+        }
         loading={isLoading}
       />
       <div style={{ display: "flex", flexWrap: "wrap", width: graphWidth }}>
