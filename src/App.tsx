@@ -3,8 +3,10 @@ import { Asset } from "./Components/Asset";
 import { Button } from "./Components/Button";
 import { ATTRIBUTE_COLOUR } from "./Config/colors";
 
+const isMobile = window.innerWidth < 700;
+
 const CONTAINER_PADDING = 16;
-const GRAPH_MARGIN = 16;
+const GRAPH_MARGIN = isMobile ? 0 : 16;
 const COINS = [
   "bitcoin",
   "ethereum",
@@ -16,7 +18,7 @@ const COINS = [
   "cardano",
   "binancecoin",
 ];
-const periods = [
+const PERIODS = [
   {
     value: 1,
     title: "1d",
@@ -57,7 +59,7 @@ function App() {
       <p style={{ margin: "0px 0px 16px 0px", color: ATTRIBUTE_COLOUR }}>
         Powered by CoinGecko
       </p>
-      {periods.map((option) => (
+      {PERIODS.map((option) => (
         <Button
           onClick={() => setDays(option.value)}
           disabled={days === option.value}
