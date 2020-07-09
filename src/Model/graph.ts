@@ -15,6 +15,7 @@ export type GraphPoints = {
 export type Period = {
   title: string;
   value: string;
+  days?: number;
   step?: {
     multiplier: number;
     unit: OpUnitType;

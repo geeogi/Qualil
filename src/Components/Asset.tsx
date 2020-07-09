@@ -3,6 +3,7 @@ import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
 import { GraphValues, Period } from "../Model/graph";
+import { ActiveTitle } from "./Asset/ActiveTitle";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -17,6 +18,10 @@ export const Asset = (props: {
   const [values, setValues] = useState<GraphValues>();
   const [info, setInfo] = useState<CoinInfo>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [activeValue, setActiveValue] = useState<{
+    price: number;
+    unix: number;
+  }>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
@@ -55,12 +60,21 @@ export const Asset = (props: {
 
   return (
     <div style={{ margin: margin + "px" }}>
-      <Title
-        name={name}
-        image={image}
-        dailyChange={dailyChange}
-        currentPrice={currentPrice}
-      />
+      {activeValue ? (
+        <ActiveTitle
+          name={name}
+          image={image}
+          price={activeValue.price}
+          unix={activeValue.unix}
+        />
+      ) : (
+        <Title
+          name={name}
+          image={image}
+          dailyChange={dailyChange}
+          currentPrice={currentPrice}
+        />
+      )}
       <Graph
         name={name}
         values={values}
@@ -71,6 +85,7 @@ export const Asset = (props: {
           positivePeriod ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
         }
         loading={isLoading}
+        setActiveValue={setActiveValue}
       />
       <div
         style={{

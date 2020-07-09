@@ -51,7 +51,7 @@ export const abbreviate = (num: number) => {
     const rounded = parseFloat(num.toPrecision(2));
     return `${rounded / 1000000}M`;
   } else {
-    return num;
+    return num.toString();
   }
 };
 

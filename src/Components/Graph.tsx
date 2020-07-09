@@ -27,21 +27,29 @@ export const Graph = (props: {
   period: Period;
   change: ChangeSince24H;
   name: string;
+  setActiveValue: (active: { price: number; unix: number }) => void;
 }) => {
   const [xLabels, setXLabels] = useState<JSX.Element[]>();
   const [yLabels, setYLabels] = useState<JSX.Element[]>();
   const [xGridLines, setXGridLines] = useState<JSX.Element[]>();
   const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
-  const [active, setActive] = useState<{
+  const [activePoint, setActivePoint] = useState<{
     left: number;
     top: number;
-    price: number;
-    unix: number;
     isClicked?: boolean;
   }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { values, change, name, loading, width, height, period } = props;
+  const {
+    values,
+    change,
+    name,
+    loading,
+    width,
+    height,
+    period,
+    setActiveValue,
+  } = props;
 
   const colors = COLORS[change];
 
@@ -133,7 +141,8 @@ export const Graph = (props: {
         // Set active state
         const left = toCanvasX(toGraphX(x));
         const top = toCanvasY(toGraphY(y));
-        setActive({ left, top, price, unix });
+        setActivePoint({ left, top });
+        setActiveValue({ price, unix });
       }
     }, canvasElement);
 
@@ -176,7 +185,17 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading, canvasRef, change, name, width, period, colors]);
+  }, [
+    values,
+    loading,
+    canvasRef,
+    change,
+    name,
+    width,
+    period,
+    colors,
+    setActiveValue,
+  ]);
 
   return (
     <div style={{ position: "relative", height: height + 24 }}>
@@ -184,12 +203,12 @@ export const Graph = (props: {
         {xGridLines}
         {yGridLines}
         {yLabels}
-        {active && (
+        {activePoint && (
           <>
-            <ActiveLine left={active.left} color={colors.COLOR} />
+            <ActiveLine left={activePoint.left} color={colors.COLOR} />
             <ActiveCircle
-              left={active.left - 8}
-              top={active.top - 8}
+              left={activePoint.left - 8}
+              top={activePoint.top - 8}
               color={colors.COLOR}
             />
           </>
