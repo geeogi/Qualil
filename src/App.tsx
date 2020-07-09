@@ -4,10 +4,8 @@ import { Button } from "./Components/Button";
 import { ATTRIBUTE_COLOUR } from "./Config/colors";
 import { PERIODS, COINS } from "./Config/constants";
 
-const isMobile = window.innerWidth < 700;
-
 const CONTAINER_PADDING = 16;
-const GRAPH_MARGIN = isMobile ? 0 : 16;
+const GRAPH_MARGIN = window.innerWidth < 700 ? 0 : 16;
 
 function App() {
   const [period, setPeriod] = useState(PERIODS[0]);
@@ -25,6 +23,7 @@ function App() {
       </p>
       {PERIODS.map((option) => (
         <Button
+          key={option.title}
           onClick={() => setPeriod(option)}
           disabled={period.value === option.value}
         >

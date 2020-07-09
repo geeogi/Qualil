@@ -11,6 +11,9 @@ import {
   fillPath,
   getGradientMethod,
 } from "./Graph/2DCanvasUtils/drawUtils";
+import { addInteractivityHandlers } from "./Graph/2DCanvasUtils/eventUtils";
+import { ActiveCircle } from "./Graph/ActiveCircle";
+import { ActiveLine } from "./Graph/ActiveLine";
 import { Frame } from "./Graph/Frame";
 import { HorizontalGridLine } from "./Graph/HorizontalGridLine";
 import { Label } from "./Graph/Label";
@@ -29,9 +32,18 @@ export const Graph = (props: {
   const [yLabels, setYLabels] = useState<JSX.Element[]>();
   const [xGridLines, setXGridLines] = useState<JSX.Element[]>();
   const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
+  const [active, setActive] = useState<{
+    left: number;
+    top: number;
+    price: number;
+    unix: number;
+    isClicked?: boolean;
+  }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   const { values, change, name, loading, width, height, period } = props;
+
+  const colors = COLORS[change];
 
   /**
    * Draw graph when canvas loads and whenever `values` changes
@@ -56,8 +68,6 @@ export const Graph = (props: {
       scalePriceY,
       scaleUnixX,
     } = getGraphConfig({ values: sample, period });
-
-    const colors = COLORS[change];
 
     // Retrieve canvas context
     const ctx = canvasElement.getContext("2d");
@@ -108,6 +118,25 @@ export const Graph = (props: {
     // Draw primary line
     drawLine(ctx, scaledPoints, colors.COLOR, 2);
 
+    // Add interactivity handler
+    addInteractivityHandlers(({ activeX }) => {
+      if (activeX) {
+        // Scale activeX to [-1,1]
+        const activeClipSpaceX = (activeX / graphWidth) * 2 - 1;
+
+        // Fetch nearest point to activeX
+        const [{ x, y, price, unix }] = [...points].sort(
+          (a, b) =>
+            Math.abs(a.x - activeClipSpaceX) - Math.abs(b.x - activeClipSpaceX)
+        );
+
+        // Set active state
+        const left = toCanvasX(toGraphX(x));
+        const top = toCanvasY(toGraphY(y));
+        setActive({ left, top, price, unix });
+      }
+    }, canvasElement);
+
     // Set labels
     setYLabels(
       priceLabels.map((price) => (
@@ -147,7 +176,7 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading, canvasRef, change, name, width, period]);
+  }, [values, loading, canvasRef, change, name, width, period, colors]);
 
   return (
     <div style={{ position: "relative", height: height + 24 }}>
@@ -155,6 +184,16 @@ export const Graph = (props: {
         {xGridLines}
         {yGridLines}
         {yLabels}
+        {active && (
+          <>
+            <ActiveLine left={active.left} color={colors.COLOR} />
+            <ActiveCircle
+              left={active.left - 8}
+              top={active.top - 8}
+              color={colors.COLOR}
+            />
+          </>
+        )}
         <canvas ref={canvasRef}></canvas>
       </Frame>
       {!loading && xLabels}

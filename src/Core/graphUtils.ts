@@ -2,6 +2,10 @@ import { GraphPoints, Period } from "../Model/graph";
 import { getDateLabels, getPriceLabels } from "./labelUtils";
 import { getScaleMethod } from "./numberUtils";
 
+/**
+ * Determines graph coordinates and axis labels
+ * @param args 
+ */
 export const getGraphConfig = (args: {
   values: { unix: number; price: number }[];
   period: Period;
