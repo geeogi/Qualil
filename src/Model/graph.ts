@@ -18,6 +18,7 @@ export type Period = {
   step?: {
     multiplier: number;
     unit: OpUnitType;
+    max: number;
   };
   format: string;
 };

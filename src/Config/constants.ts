@@ -18,36 +18,36 @@ export const PERIODS: Period[] = [
   {
     value: "1",
     title: "1d",
-    step: { multiplier: 6, unit: "h" },
+    step: { multiplier: 6, unit: "h", max: 3 },
     format: "HH:mm",
   },
   {
     value: "7",
     title: "1w",
-    step: { multiplier: 2, unit: "d" },
+    step: { multiplier: 2, unit: "d", max: 3 },
     format: "D MMM",
   },
   {
     value: "30",
     title: "1m",
-    step: { multiplier: 1, unit: "w" },
+    step: { multiplier: 1, unit: "w", max: 3 },
     format: "D MMM",
   },
   {
     value: "90",
     title: "3m",
-    step: { multiplier: 1, unit: "M" },
+    step: { multiplier: 1, unit: "M", max: 3 },
     format: "MMM",
   },
   {
     value: "365",
     title: "1y",
-    step: { multiplier: 3, unit: "M" },
+    step: { multiplier: 3, unit: "M", max: 3 },
     format: "MMM 'YY",
   },
   {
     value: "max",
     title: "All",
-    format: "D MMM 'YY",
+    format: "'YY",
   },
 ];

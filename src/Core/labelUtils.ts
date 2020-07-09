@@ -1,10 +1,8 @@
 import dayjs from "dayjs";
-import { UNIX_HOUR } from "../Config/constants";
 import { Period } from "../Model/graph";
-import { roundToNearest } from "./numberUtils";
 
 /**
- * Returns a list of prices corresponding to ticks
+ * Generates a list of prices using tick percentages
  * @param prices
  * @param ticks
  */
@@ -16,24 +14,29 @@ export const getPriceLabels = (prices: number[]) => {
   const max = sortedPrices[total - 1];
   const diff = max - min;
 
-  return [0.25, 0.5, 0.75, 1].map((tick) => min + tick * diff);
+  const ticks = [0.25, 0.5, 0.75, 1];
+  return ticks.map((tick) => min + tick * diff);
 };
 
 /**
- * Returns a list of timestamps corresponding to step/ticks
+ * Generates a list of timestamps using step max/unit/multiplier
  * @param unixTimestamps
  */
 export const getDateLabels = (unixTimestamps: number[], period: Period) => {
-  const total = unixTimestamps.length;
-  if (period.step) {
-    const { step } = period;
-    const start = dayjs(unixTimestamps[0]).startOf(step.unit);
-    return [1, 2, 3].map(
-      (tick) => start.add(tick * step.multiplier, step.unit).unix() * 1000
-    );
-  } else {
-    return [0.25, 0.5, 0.75].map((tick) =>
-      roundToNearest(unixTimestamps[Math.round(tick * total)], UNIX_HOUR)
-    );
+  const max = period.step ? period.step.max : 7;
+  const multiplier = period.step ? period.step.multiplier : 1;
+  const unit = period.step ? period.step.unit : "y";
+
+  const labels = [];
+
+  const start = dayjs(unixTimestamps[0]);
+  const end = dayjs(unixTimestamps[unixTimestamps.length - 1]);
+
+  let thisLabel = start.startOf(unit).add(multiplier, unit);
+  while (thisLabel.isBefore(end) && labels.length < max) {
+    labels.push(thisLabel.unix() * 1000);
+    thisLabel = thisLabel.add(multiplier, unit);
   }
+
+  return labels;
 };
