@@ -2,51 +2,15 @@ import React, { useState } from "react";
 import { Asset } from "./Components/Asset";
 import { Button } from "./Components/Button";
 import { ATTRIBUTE_COLOUR } from "./Config/colors";
+import { PERIODS, COINS } from "./Config/constants";
 
 const isMobile = window.innerWidth < 700;
 
 const CONTAINER_PADDING = 16;
 const GRAPH_MARGIN = isMobile ? 0 : 16;
-const COINS = [
-  "bitcoin",
-  "ethereum",
-  "tether",
-  "ripple",
-  "bitcoin-cash",
-  "bitcoin-cash-sv",
-  "litecoin",
-  "cardano",
-  "binancecoin",
-];
-const PERIODS = [
-  {
-    value: 1,
-    title: "1d",
-  },
-  {
-    value: 7,
-    title: "1w",
-  },
-  {
-    value: 30,
-    title: "1m",
-  },
-  {
-    value: 90,
-    title: "3m",
-  },
-  {
-    value: 365,
-    title: "1y",
-  },
-  {
-    value: 1825,
-    title: "5y",
-  },
-];
 
 function App() {
-  const [days, setDays] = useState(7);
+  const [days, setDays] = useState(1);
 
   const containerWidth = window.innerWidth - CONTAINER_PADDING * 2;
   const boxWidth = containerWidth > 1000 ? containerWidth / 3 : containerWidth;

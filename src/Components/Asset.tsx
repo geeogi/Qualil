@@ -35,7 +35,7 @@ export const Asset = (props: {
       });
   }, [coin, days]);
 
-  if (!info) {
+  if (!info || !values) {
     return (
       <div
         style={{ width: graphWidth + 32, height: graphHeight + 32 + 60 + 32 }}
@@ -66,7 +66,9 @@ export const Asset = (props: {
         width={graphWidth}
         height={graphHeight}
         change={
-          dailyChange >= 0 ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
+          values[0].price < values[values.length - 1].price
+            ? ChangeSince24H.POSITIVE
+            : ChangeSince24H.NEGATIVE
         }
         loading={isLoading}
       />
