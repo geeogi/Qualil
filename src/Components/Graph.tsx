@@ -46,6 +46,7 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
+  // Use neutral colour while active
   const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
 
   /**
@@ -197,7 +198,9 @@ export const Graph = (props: {
   ]);
 
   return (
-    <div style={{ position: "relative", height: height + 24 }}>
+    <div
+      style={{ position: "relative", height: height + 24, userSelect: "none" }}
+    >
       <Frame width={width} height={height} loading={loading}>
         {xGridLines}
         {yGridLines}

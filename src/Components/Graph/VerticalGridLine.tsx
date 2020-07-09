@@ -10,6 +10,7 @@ export const VerticalGridLine = (props: { left: number }) => (
       position: "absolute",
       left: props.left,
       zIndex: -1,
+      userSelect: "none",
     }}
   ></div>
 );

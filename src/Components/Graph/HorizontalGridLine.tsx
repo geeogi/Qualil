@@ -10,6 +10,7 @@ export const HorizontalGridLine = (props: { top: number }) => (
       position: "absolute",
       top: props.top,
       zIndex: -1,
+      userSelect: "none",
     }}
   ></div>
 );
