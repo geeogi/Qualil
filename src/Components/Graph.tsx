@@ -75,7 +75,7 @@ export const Graph = (props: {
 
     // Utils to convert from clip space [-1,1] to graph coordinates
     const toGraphX = (x: number) => ((x + 1) / 2) * graphWidth;
-    const toGraphY = (y: number) => ((y + 1) / 2.1) * graphDepth;
+    const toGraphY = (y: number) => ((y + 1) / 2.2) * graphDepth + 12;
 
     // Utils to convert from graph coordinates to canvas pixels
     const toCanvasX = (graphX: number) => graphX;
