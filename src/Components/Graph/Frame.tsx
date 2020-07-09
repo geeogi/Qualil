@@ -11,6 +11,7 @@ export const Frame = (props: {
       position: "relative",
       width: props.width + "px",
       height: props.height + "px",
+      userSelect: "none",
     }}
   >
     {props.loading ? "loading..." : props.children}

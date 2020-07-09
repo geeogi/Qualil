@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import React from "react";
-import { AXIS_COLOUR } from "../../Config/colors";
+import { CONTRAST_COLOUR } from "../../Config/colors";
 import { numberToString } from "../../Core/numberUtils";
 
 export const ActiveTitle = (props: {
@@ -27,12 +27,10 @@ export const ActiveTitle = (props: {
           width: "100%",
         }}
       >
-        <div>
-          {name} ${numberToString(price)}{" "}
-        </div>
-        <div style={{ color: AXIS_COLOUR }}>
+        <div>${numberToString(price)} </div>
+        <p style={{ color: CONTRAST_COLOUR, margin: 0 }}>
           {dayjs(unix).format("HH:mm D MMM 'YY")}
-        </div>
+        </p>
       </h3>
     </div>
   );

@@ -1,17 +1,13 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
+import { scale2DCanvas } from "../Core/canvasUtils";
+import { drawLine, fillPath, getGradientMethod } from "../Core/drawUtils";
+import { addInteractivityHandlers } from "../Core/eventUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
 import { GraphValues, Period } from "../Model/graph";
-import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
-import {
-  drawLine,
-  fillPath,
-  getGradientMethod,
-} from "./Graph/2DCanvasUtils/drawUtils";
-import { addInteractivityHandlers } from "./Graph/2DCanvasUtils/eventUtils";
 import { ActiveCircle } from "./Graph/ActiveCircle";
 import { ActiveLine } from "./Graph/ActiveLine";
 import { Frame } from "./Graph/Frame";
@@ -27,7 +23,7 @@ export const Graph = (props: {
   period: Period;
   change: ChangeSince24H;
   name: string;
-  setActiveValue: (active: { price: number; unix: number }) => void;
+  setActiveValue: (active: { price: number; unix: number } | undefined) => void;
 }) => {
   const [xLabels, setXLabels] = useState<JSX.Element[]>();
   const [yLabels, setYLabels] = useState<JSX.Element[]>();
@@ -36,7 +32,6 @@ export const Graph = (props: {
   const [activePoint, setActivePoint] = useState<{
     left: number;
     top: number;
-    isClicked?: boolean;
   }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -51,7 +46,7 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
-  const colors = COLORS[change];
+  const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
 
   /**
    * Draw graph when canvas loads and whenever `values` changes
@@ -143,6 +138,10 @@ export const Graph = (props: {
         const top = toCanvasY(toGraphY(y));
         setActivePoint({ left, top });
         setActiveValue({ price, unix });
+      } else {
+        // Reset active state
+        setActivePoint(undefined);
+        setActiveValue(undefined);
       }
     }, canvasElement);
 
@@ -207,8 +206,9 @@ export const Graph = (props: {
           <>
             <ActiveLine left={activePoint.left} color={colors.COLOR} />
             <ActiveCircle
-              left={activePoint.left - 8}
-              top={activePoint.top - 8}
+              size={16}
+              left={activePoint.left}
+              top={activePoint.top}
               color={colors.COLOR}
             />
           </>

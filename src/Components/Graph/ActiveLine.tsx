@@ -9,6 +9,9 @@ export const ActiveLine = (props: { left: number; color: string }) => (
       position: "absolute",
       left: props.left,
       zIndex: 1,
+      pointerEvents: "none",
+      userSelect: "none",
+      touchAction: "none",
     }}
   ></div>
 );

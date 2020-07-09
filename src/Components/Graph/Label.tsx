@@ -14,6 +14,9 @@ export const Label = (props: { text: string; top: number; left: number }) => (
       padding: "1px 3px",
       marginTop: "1px",
       borderRadius: "0 3px 3px 0",
+      pointerEvents: "none",
+      userSelect: "none",
+      touchAction: "none",
     }}
   >
     {props.text}
