@@ -51,6 +51,7 @@ export const Asset = (props: {
   const ath = info.market_data.ath["usd"];
   const atl = info.market_data.atl["usd"];
   const totalVolume = info.market_data.total_volume["usd"];
+  const positivePeriod = values[0].price < values[values.length - 1].price;
 
   return (
     <div style={{ margin: margin + "px" }}>
@@ -66,9 +67,7 @@ export const Asset = (props: {
         width={graphWidth}
         height={graphHeight}
         change={
-          values[0].price < values[values.length - 1].price
-            ? ChangeSince24H.POSITIVE
-            : ChangeSince24H.NEGATIVE
+          positivePeriod ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
         }
         loading={isLoading}
       />
