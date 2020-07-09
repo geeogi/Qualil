@@ -34,7 +34,7 @@ export const Graph = (props: {
   const { values, change, name, loading, width, height } = props;
 
   /**
-   * Draws graph when canvas loads and whenever `values` changes
+   * Draw graph when canvas loads and whenever `values` changes
    */
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -43,13 +43,19 @@ export const Graph = (props: {
       return;
     }
 
+    // Sample values to achieve roughly 1 point per pixel
+    const sample = values.filter(
+      (_, index) => index % Math.ceil(values.length / width) === 0
+    );
+
+    // Get graph values
     const {
       points,
       dateLabels,
       priceLabels,
       scalePriceY,
       scaleUnixX,
-    } = getGraphConfig({ values });
+    } = getGraphConfig({ values: sample });
 
     const colors = COLORS[change];
 
@@ -113,7 +119,7 @@ export const Graph = (props: {
         />
       ))
     );
-    const format = dateLabels[1] - dateLabels[0] > UNIX_DAY ? "D MMM" : "HH:mm";
+    const format = dateLabels[1] - dateLabels[0] > UNIX_DAY ? "D MMM YY" : "HH:mm";
     setXLabels(
       dateLabels.map((unix) => (
         <Label
@@ -142,7 +148,7 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading, canvasRef, change, name]);
+  }, [values, loading, canvasRef, change, name, width]);
 
   return (
     <div style={{ position: "relative", height: height + 24 }}>
@@ -152,7 +158,7 @@ export const Graph = (props: {
         {yLabels}
         <canvas ref={canvasRef}></canvas>
       </Frame>
-      {xLabels}
+      {!loading && xLabels}
     </div>
   );
 };
