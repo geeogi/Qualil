@@ -1,11 +1,10 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
-import { UNIX_DAY } from "../Config/constants";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
-import { GraphValues } from "../Model/graph";
+import { GraphValues, Period } from "../Model/graph";
 import { scale2DCanvas } from "./Graph/2DCanvasUtils/canvasUtils";
 import {
   drawLine,
@@ -22,6 +21,7 @@ export const Graph = (props: {
   loading?: boolean;
   width: number;
   height: number;
+  period: Period;
   change: ChangeSince24H;
   name: string;
 }) => {
@@ -31,7 +31,7 @@ export const Graph = (props: {
   const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  const { values, change, name, loading, width, height } = props;
+  const { values, change, name, loading, width, height, period } = props;
 
   /**
    * Draw graph when canvas loads and whenever `values` changes
@@ -55,7 +55,7 @@ export const Graph = (props: {
       priceLabels,
       scalePriceY,
       scaleUnixX,
-    } = getGraphConfig({ values: sample });
+    } = getGraphConfig({ values: sample, period });
 
     const colors = COLORS[change];
 
@@ -119,12 +119,11 @@ export const Graph = (props: {
         />
       ))
     );
-    const format = dateLabels[1] - dateLabels[0] > UNIX_DAY ? "D MMM YY" : "HH:mm";
     setXLabels(
       dateLabels.map((unix) => (
         <Label
           key={`${name}-${unix}`}
-          text={dayjs(unix).format(format)}
+          text={dayjs(unix).format(period.format)}
           top={graphDepth}
           left={toCanvasX(toGraphX(scaleUnixX(unix)))}
         />
@@ -148,7 +147,7 @@ export const Graph = (props: {
         />
       ))
     );
-  }, [values, loading, canvasRef, change, name, width]);
+  }, [values, loading, canvasRef, change, name, width, period]);
 
   return (
     <div style={{ position: "relative", height: height + 24 }}>

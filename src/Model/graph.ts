@@ -1,3 +1,5 @@
+import { OpUnitType } from "dayjs";
+
 export type GraphValues = {
   price: number;
   unix: number;
@@ -9,3 +11,13 @@ export type GraphPoints = {
   price: number;
   unix: number;
 }[];
+
+export type Period = {
+  title: string;
+  value: string;
+  step?: {
+    multiplier: number;
+    unit: OpUnitType;
+  };
+  format: string;
+};

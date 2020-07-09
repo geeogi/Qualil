@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
-import { GraphValues } from "../Model/graph";
+import { GraphValues, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -12,20 +12,20 @@ export const Asset = (props: {
   graphWidth: number;
   graphHeight: number;
   margin: number;
-  days: number;
+  period: Period;
 }) => {
   const [values, setValues] = useState<GraphValues>();
   const [info, setInfo] = useState<CoinInfo>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  const { coin, days, graphWidth, graphHeight, margin } = props;
+  const { coin, period, graphWidth, graphHeight, margin } = props;
 
   /**
    * Fetches and sets coin data on load and whenever `days` changes
    */
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, days)])
+    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, period.value)])
       .then(([info, values]) => {
         setValues(values);
         setInfo(info);
@@ -33,7 +33,7 @@ export const Asset = (props: {
       .finally(() => {
         setIsLoading(false);
       });
-  }, [coin, days]);
+  }, [coin, period]);
 
   if (!info || !values) {
     return (
@@ -66,6 +66,7 @@ export const Asset = (props: {
         values={values}
         width={graphWidth}
         height={graphHeight}
+        period={period}
         change={
           positivePeriod ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
         }

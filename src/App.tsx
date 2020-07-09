@@ -10,7 +10,7 @@ const CONTAINER_PADDING = 16;
 const GRAPH_MARGIN = isMobile ? 0 : 16;
 
 function App() {
-  const [days, setDays] = useState(1);
+  const [period, setPeriod] = useState(PERIODS[0]);
 
   const containerWidth = window.innerWidth - CONTAINER_PADDING * 2;
   const boxWidth = containerWidth > 1000 ? containerWidth / 3 : containerWidth;
@@ -25,8 +25,8 @@ function App() {
       </p>
       {PERIODS.map((option) => (
         <Button
-          onClick={() => setDays(option.value)}
-          disabled={days === option.value}
+          onClick={() => setPeriod(option)}
+          disabled={period.value === option.value}
         >
           {option.title}
         </Button>
@@ -45,7 +45,7 @@ function App() {
             graphWidth={graphWidth}
             graphHeight={graphHeight}
             margin={GRAPH_MARGIN}
-            days={days}
+            period={period}
           />
         ))}
       </main>

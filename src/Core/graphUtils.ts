@@ -1,12 +1,13 @@
-import { GraphPoints } from "../Model/graph";
+import { GraphPoints, Period } from "../Model/graph";
 import { getDateLabels, getPriceLabels } from "./labelUtils";
 import { getScaleMethod } from "./numberUtils";
 
 export const getGraphConfig = (args: {
   values: { unix: number; price: number }[];
+  period: Period;
 }) => {
   // Determine the base for the config
-  const { values } = args;
+  const { values, period } = args;
 
   // Calculate min, max and average price
   const minPrice = Math.min(...values.map((value) => value.price));
@@ -17,7 +18,10 @@ export const getGraphConfig = (args: {
   const latestDate = values[values.length - 1].unix;
 
   // Configure x-axis labels
-  const dateLabels = getDateLabels(values.map(({ unix }) => unix));
+  const dateLabels = getDateLabels(
+    values.map(({ unix }) => unix),
+    period
+  );
 
   // Configure y-axis labels
   const priceLabels = getPriceLabels(values.map(({ price }) => price));
