@@ -1,6 +1,4 @@
 import React from "react";
-import { BACKGROUND_COLOR } from "../../Config/colors";
-
 export const Label = (props: { text: string; top: number; left: number }) => (
   <label
     style={{
