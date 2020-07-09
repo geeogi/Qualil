@@ -1,15 +1,15 @@
 /* :root {
   --background-color: white;
-  --contrast-color: #111;
+  --contrast-color: #111111;
   --axis-color: #e3e3e3;
-  --attribute-color: #333;
+  --attribute-color: #333333;
 } */
 
 :root {
-  --background-color: #111;
+  --background-color: #111111;
   --contrast-color: white;
-  --axis-color: #333;
-  --attribute-color: #999;
+  --axis-color: #333333;
+  --attribute-color: #999999;
 }
 
 body {
