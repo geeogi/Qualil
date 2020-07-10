@@ -25,16 +25,18 @@ export const Graph = (props: {
   name: string;
   setActiveValue: (active: { price: number; unix: number } | undefined) => void;
 }) => {
-  const [xLabels, setXLabels] = useState<JSX.Element[]>();
-  const [yLabels, setYLabels] = useState<JSX.Element[]>();
-  const [xGridLines, setXGridLines] = useState<JSX.Element[]>();
-  const [yGridLines, setYGridLines] = useState<JSX.Element[]>();
+  const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
+  const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
+  const [points, setScaledPoints] = useState<
+    { canvasX: number; canvasY: number }[]
+  >();
   const [activePoint, setActivePoint] = useState<{
     left: number;
     top: number;
   }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
+  // Parse props
   const {
     values,
     change,
@@ -46,15 +48,14 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
-  // Use neutral colour while active
+  // Use the neutral colour while active
   const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
 
   /**
-   * Draw graph when canvas loads and whenever `values` changes
+   * Configure the graph when canvas loads and whenever `values` changes
    */
   useEffect(() => {
     const canvasElement = canvasRef.current;
-
     if (!canvasElement || !values) {
       return;
     }
@@ -64,7 +65,7 @@ export const Graph = (props: {
       (_, index) => index % Math.ceil(values.length / width) === 0
     );
 
-    // Get graph values
+    // Setup graph values
     const {
       points,
       dateLabels,
@@ -82,27 +83,13 @@ export const Graph = (props: {
     // Scale the canvas for retina displays
     scale2DCanvas(ctx, canvasElement);
 
-    // Fetch the desired canvas height and width
-    const canvasHeight = canvasElement.offsetHeight;
-    const canvasWidth = canvasElement.offsetWidth;
-
-    // Clear graph
-    ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-
-    // Calculate graph dimensions
-    const graphDepth = canvasHeight;
-    const graphWidth = canvasWidth;
-
     // Utils to convert from clip space [-1,1] to graph coordinates
-    const toGraphX = (x: number) => ((x + 1) / 2) * graphWidth;
-    const toGraphY = (y: number) => ((y + 1) / 2.2) * graphDepth + 12;
+    const toGraphX = (x: number) => ((x + 1) / 2) * width;
+    const toGraphY = (y: number) => ((y + 1) / 2.2) * height + 12;
 
     // Utils to convert from graph coordinates to canvas pixels
     const toCanvasX = (graphX: number) => graphX;
-    const toCanvasY = (graphY: number) => graphDepth - graphY;
-
-    // Configure gradient util
-    const getGradient = getGradientMethod(ctx, 0, graphDepth);
+    const toCanvasY = (graphY: number) => height - graphY;
 
     // Scale graph coordinates from clip space [-1,1] to screen resolution
     const scaledPoints = points.map((point) => ({
@@ -110,23 +97,28 @@ export const Graph = (props: {
       canvasY: toCanvasY(toGraphY(point.y)),
     }));
 
-    // Draw primary block
-    const firstPoint = { canvasX: toCanvasX(0), canvasY: toCanvasY(0) };
-    const lastPoint = { canvasX: toCanvasX(graphWidth), canvasY: toCanvasY(0) };
-    const path = [firstPoint, ...scaledPoints, lastPoint];
-    const topColor = colors.COLOR_ALPHA(0.6);
-    const bottomColor = colors.COLOR_ALPHA(0);
-    const gradient = getGradient(topColor, bottomColor);
-    fillPath(ctx, path, gradient);
+    // Set labels
+    setYLabels(
+      priceLabels.map((price) => ({
+        price,
+        top: toCanvasY(toGraphY(scalePriceY(price))),
+      }))
+    );
+    setXLabels(
+      dateLabels.map((unix) => ({
+        unix,
+        left: toCanvasX(toGraphX(scaleUnixX(unix))),
+      }))
+    );
 
-    // Draw primary line
-    drawLine(ctx, scaledPoints, colors.COLOR, 2);
+    // Set scaled points
+    setScaledPoints(scaledPoints);
 
-    // Add interactivity handler
+    // Add interactivity handlers
     addInteractivityHandlers(({ activeX }) => {
       if (activeX) {
         // Scale activeX to [-1,1]
-        const activeClipSpaceX = (activeX / graphWidth) * 2 - 1;
+        const activeClipSpaceX = (activeX / width) * 2 - 1;
 
         // Fetch nearest point to activeX
         const [{ x, y, price, unix }] = [...points].sort(
@@ -145,66 +137,61 @@ export const Graph = (props: {
         setActiveValue(undefined);
       }
     }, canvasElement);
+  }, [values, loading, canvasRef, width, height, period, name, setActiveValue]);
 
-    // Set labels
-    setYLabels(
-      priceLabels.map((price) => (
-        <Label
-          key={`${name}-${price.toString()}`}
-          text={numberWithSignificantDigits(price)}
-          top={toCanvasY(toGraphY(scalePriceY(price)))}
-          left={0}
-        />
-      ))
-    );
-    setXLabels(
-      dateLabels.map((unix) => (
-        <Label
-          key={`${name}-${unix}`}
-          text={dayjs(unix).format(period.format)}
-          top={graphDepth}
-          left={toCanvasX(toGraphX(scaleUnixX(unix)))}
-        />
-      ))
-    );
+  /**
+   * Draw the graph every render
+   */
+  useEffect(() => {
+    const canvasElement = canvasRef.current;
+    if (!canvasElement || !points) {
+      return;
+    }
 
-    // Set grid lines
-    setXGridLines(
-      dateLabels.map((unix) => (
-        <VerticalGridLine
-          key={`${name}-${unix}`}
-          left={toCanvasX(toGraphX(scaleUnixX(unix)))}
-        />
-      ))
-    );
-    setYGridLines(
-      priceLabels.map((price) => (
-        <HorizontalGridLine
-          key={`${name}-${price.toString()}`}
-          top={toCanvasY(toGraphY(scalePriceY(price)))}
-        />
-      ))
-    );
-  }, [
-    values,
-    loading,
-    canvasRef,
-    change,
-    name,
-    width,
-    period,
-    colors,
-    setActiveValue,
-  ]);
+    // Retrieve canvas context
+    const ctx = canvasElement.getContext("2d");
+    if (!ctx) {
+      throw new Error("Unable to retrieve 2D context");
+    }
+
+    // Clear graph
+    ctx.clearRect(0, 0, width, height);
+
+    // Configure gradient util
+    const getGradient = getGradientMethod(ctx, 0, height);
+
+    // Draw primary block
+    const firstPoint = { canvasX: 0, canvasY: height };
+    const lastPoint = { canvasX: width, canvasY: height };
+    const path = [firstPoint, ...points, lastPoint];
+    const topColor = colors.COLOR_ALPHA(0.6);
+    const bottomColor = colors.COLOR_ALPHA(0);
+    const gradient = getGradient(topColor, bottomColor);
+    fillPath(ctx, path, gradient);
+
+    // Draw primary line
+    drawLine(ctx, points, colors.COLOR, 2);
+  });
 
   return (
     <div
       style={{ position: "relative", height: height + 24, userSelect: "none" }}
     >
       <Frame width={width} height={height} loading={loading}>
-        {xGridLines}
-        {yGridLines}
-        {yLabels}
+        {xLabels?.map(({ left, unix }) => (
+          <VerticalGridLine left={left} key={`${name}-${unix.toString()}`} />
+        ))}
+        {yLabels?.map(({ top, price }) => (
+          <HorizontalGridLine top={top} key={`${name}-${price.toString()}`} />
+        ))}
+        {yLabels?.map(({ price, top }) => (
+          <Label
+            key={`${name}-${price.toString()}`}
+            text={numberWithSignificantDigits(price)}
+            top={top}
+            left={0}
+          />
+        ))}
         {activePoint && (
           <>
             <ActiveLine
@@ -222,7 +209,15 @@ export const Graph = (props: {
         )}
         <canvas ref={canvasRef}></canvas>
       </Frame>
-      {!loading && xLabels}
+      {!loading &&
+        xLabels?.map(({ unix, left }) => (
+          <Label
+            key={`${name}-${unix.toString()}`}
+            text={dayjs(unix).format(period.format)}
+            top={height}
+            left={left}
+          />
+        ))}
     </div>
   );
 };
