@@ -18,6 +18,7 @@ export const Asset = (props: {
   const [values, setValues] = useState<GraphValues>();
   const [info, setInfo] = useState<CoinInfo>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<Error>();
   const [activeValue, setActiveValue] = useState<{
     price: number;
     unix: number;
@@ -35,6 +36,7 @@ export const Asset = (props: {
         setValues(values);
         setInfo(info);
       })
+      .catch(setError)
       .finally(() => {
         setIsLoading(false);
       });
@@ -44,7 +46,11 @@ export const Asset = (props: {
     return (
       <div
         style={{ width: graphWidth + 32, height: graphHeight + 32 + 60 + 32 }}
-      />
+      >
+        {error && (
+          <p>An error occurred when connecting to CoinGecko: {error.message}</p>
+        )}
+      </div>
     );
   }
 
