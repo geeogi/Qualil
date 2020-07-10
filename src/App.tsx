@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Asset } from "./Components/Asset";
 import { Button } from "./Components/Button";
 import { ATTRIBUTE_COLOUR } from "./Config/colors";
-import { PERIODS, COINS } from "./Config/constants";
+import { COINS, PERIODS } from "./Config/constants";
 
 const CONTAINER_PADDING = 16;
 const GRAPH_MARGIN = window.innerWidth < 700 ? 0 : 16;
