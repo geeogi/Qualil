@@ -4,6 +4,13 @@ import {
 } from "./domUtils";
 
 /**
+ * This global state tracks whether or not a touch event was fired recently
+ * If so, we'll want to disable mousemove events to prevent double firing
+ *
+ */
+let wasRecentlyTouched = false;
+
+/**
  * Return event listeners which will call the callback method with activeX and
  * activeY whenever these values change
  * @param callback
@@ -12,30 +19,33 @@ export const addInteractivityHandlers = (
   callback: (args: { activeX?: number; activeY?: number }) => void,
   element: HTMLElement
 ) => {
-  // Methods
   const handleMouseMove = (e: any) => {
-    const { x, y } = getCoordinatesOfMouseEvent(e);
-    callback({
-      activeX: x,
-      activeY: y,
-    });
+    if (!wasRecentlyTouched) {
+      const { x, y } = getCoordinatesOfMouseEvent(e);
+      callback({ activeX: x, activeY: y });
+    }
   };
 
   const handleTouchStart = (e: any) => {
+    wasRecentlyTouched = true;
     const { x, y } = getCoordinatesOfTouchEvent(e);
-    callback({
-      activeX: x,
-      activeY: y,
-    });
+    callback({ activeX: x, activeY: y });
   };
+
+  const handleTouchMove = handleTouchStart;
 
   const handleMouseLeave = () => {
     callback({});
   };
 
-  const handleTouchMove = handleTouchStart;
-  const handleTouchEnd = handleMouseLeave;
-  const handleTouchCancel = handleMouseLeave;
+  const handleTouchEnd = () => {
+    callback({});
+    setTimeout(() => {
+      wasRecentlyTouched = false;
+    }, 2000);
+  };
+
+  const handleTouchCancel = handleTouchEnd;
 
   // Attach event listeners
   element.addEventListener("mousemove", handleMouseMove, { passive: true });
