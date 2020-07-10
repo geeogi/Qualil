@@ -1,5 +1,5 @@
 /* :root {
-  --background-color: white;
+  --background-color: #ffffff;
   --contrast-color: #111111;
   --axis-color: #e3e3e3;
   --attribute-color: #333333;
@@ -42,6 +42,7 @@ label {
 
 button {
   background-color: var(--axis-color);
+  font-size: 14px;
   border: none;
   border-radius: 3px;
   color: var(--contrast-color);
