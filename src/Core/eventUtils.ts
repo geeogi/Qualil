@@ -6,12 +6,30 @@ import {
 /**
  * This global state tracks whether or not a touch event was fired recently
  * If so, we'll want to disable mousemove events to prevent double firing
- *
  */
 let wasRecentlyTouched = false;
+let resetTouchedTimerId: NodeJS.Timeout;
+
+const setRecentlyTouched = () => {
+  wasRecentlyTouched = true;
+  removeTouchedResetTimer();
+};
+
+const removeTouchedResetTimer = () => {
+  if (resetTouchedTimerId) {
+    clearTimeout(resetTouchedTimerId);
+  }
+};
+
+const setTouchedResetTimer = () => {
+  removeTouchedResetTimer();
+  resetTouchedTimerId = setTimeout(() => {
+    wasRecentlyTouched = false;
+  }, 2000);
+};
 
 /**
- * Return event listeners which will call the callback method with activeX and
+ * Set event listeners which will call the callback method with activeX and
  * activeY whenever these values change
  * @param callback
  */
@@ -27,7 +45,7 @@ export const addInteractivityHandlers = (
   };
 
   const handleTouchStart = (e: any) => {
-    wasRecentlyTouched = true;
+    setRecentlyTouched();
     const { x, y } = getCoordinatesOfTouchEvent(e);
     callback({ activeX: x, activeY: y });
   };
@@ -40,9 +58,7 @@ export const addInteractivityHandlers = (
 
   const handleTouchEnd = () => {
     callback({});
-    setTimeout(() => {
-      wasRecentlyTouched = false;
-    }, 2000);
+    setTouchedResetTimer();
   };
 
   const handleTouchCancel = handleTouchEnd;

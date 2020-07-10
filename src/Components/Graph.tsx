@@ -207,9 +207,13 @@ export const Graph = (props: {
         {yLabels}
         {activePoint && (
           <>
-            <ActiveLine left={activePoint.left} color={colors.COLOR} />
+            <ActiveLine
+              left={activePoint.left}
+              color={colors.COLOR}
+              width={2}
+            />
             <ActiveCircle
-              size={16}
+              size={18}
               left={activePoint.left}
               top={activePoint.top}
               color={colors.COLOR}
