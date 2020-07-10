@@ -9,7 +9,7 @@ export const getCoinHistoricalData = async (coin: string, days: string) => {
 };
 
 export const getCoinInfo = async (coin: string) => {
-  const url = `${COINGECKO_BASE_URL}/coins/${coin}`;
+  const url = `${COINGECKO_BASE_URL}/coins/${coin}?community_data=false&developer_data=false&sparkline=false&tickers=false&localization=false`;
   const response = await fetch(url);
   return response.json() as Promise<CoinInfo>;
 };
