@@ -29,14 +29,13 @@ export const addInteractivityHandlers = (
     });
   };
 
-  const handleTouchMove = handleTouchStart;
-
   const handleMouseLeave = () => {
     callback({});
-    console.log("left");
   };
 
+  const handleTouchMove = handleTouchStart;
   const handleTouchEnd = handleMouseLeave;
+  const handleTouchCancel = handleMouseLeave;
 
   // Attach event listeners
   element.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -44,6 +43,7 @@ export const addInteractivityHandlers = (
   element.addEventListener("touchmove", handleTouchMove, { passive: true });
   element.addEventListener("touchstart", handleTouchStart, { passive: true });
   element.addEventListener("touchend", handleTouchEnd, { passive: true });
+  element.addEventListener("touchcancel", handleTouchCancel, { passive: true });
 
   // Return method to remove event listeners
   return () => {
@@ -52,5 +52,6 @@ export const addInteractivityHandlers = (
     element.addEventListener("touchmove", handleTouchMove);
     element.addEventListener("touchstart", handleTouchStart);
     element.addEventListener("touchend", handleTouchEnd);
+    element.addEventListener("touchcancel", handleTouchCancel);
   };
 };
