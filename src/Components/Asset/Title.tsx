@@ -7,6 +7,7 @@ import { Period } from "../../Model/graph";
 
 export const Title = (props: {
   name: string;
+  symbol: string;
   price: number;
   image: string;
   dailyChange: number;
@@ -14,7 +15,16 @@ export const Title = (props: {
   period?: Period;
   active?: boolean;
 }) => {
-  const { name, price, image, dailyChange, unix, period, active } = props;
+  const {
+    name,
+    price,
+    image,
+    dailyChange,
+    unix,
+    period,
+    active,
+    symbol,
+  } = props;
 
   const { POSITIVE, NEGATIVE } = ChangeSince24H;
   const change = dailyChange >= 0 ? POSITIVE : NEGATIVE;
@@ -42,16 +52,10 @@ export const Title = (props: {
           height="33px"
         ></img>
         <h3>
-          {name} ${numberToString(price)}
+          {window.innerWidth < 1000 ? symbol : name} ${numberToString(price)}
         </h3>
       </div>
-      <div
-        style={{
-          marginLeft: "auto",
-          minWidth: "130px",
-          textAlign: "right",
-        }}
-      >
+      <div style={{ marginLeft: "auto", textAlign: "right" }}>
         {!active && (
           <span style={{ color }}>
             {change === ChangeSince24H.POSITIVE ? "+" : "-"}
@@ -59,7 +63,9 @@ export const Title = (props: {
           </span>
         )}
         {active && unix && period && (
-          <>{dayjs(unix).format(period.scrubFormat)}</>
+          <span style={{ color: COLORS.NEUTRAL.COLOR }}>
+            {dayjs(unix).format(period.scrubFormat)}
+          </span>
         )}
       </div>
     </div>

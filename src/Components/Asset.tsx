@@ -65,9 +65,10 @@ export const Asset = (props: {
   const positivePeriod = values[0].price < values[values.length - 1].price;
 
   return (
-    <div style={{ margin: margin + "px" }}>
+    <div style={{ margin: margin + "px", marginTop: "24px" }}>
       <Title
         name={name}
+        symbol={symbol}
         image={image}
         price={activeValue ? activeValue.price : currentPrice}
         unix={activeValue && activeValue.unix}
