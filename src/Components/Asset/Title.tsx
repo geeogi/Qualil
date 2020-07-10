@@ -29,7 +29,7 @@ export const Title = (props: {
       <h3>
         <span>
           {name} ${currentPrice}{" "}
-          <span style={{ color }}>
+          <span style={{ color, fontSize: "14px" }}>
             {sign}
             {dailyChangePercent}%
           </span>
