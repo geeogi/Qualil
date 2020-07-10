@@ -213,7 +213,7 @@ export const Graph = (props: {
         xLabels?.map(({ unix, left }) => (
           <Label
             key={`${name}-${unix.toString()}`}
-            text={dayjs(unix).format(period.format)}
+            text={dayjs(unix).format(period.labelFormat)}
             top={height}
             left={left}
           />

@@ -21,5 +21,6 @@ export type Period = {
     unit: OpUnitType;
     max: number;
   };
-  format: string;
+  labelFormat: string;
+  scrubFormat: string;
 };

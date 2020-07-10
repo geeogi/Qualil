@@ -72,6 +72,7 @@ export const Asset = (props: {
           image={image}
           price={activeValue.price}
           unix={activeValue.unix}
+          period={period}
         />
       ) : (
         <Title
