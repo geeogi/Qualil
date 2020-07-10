@@ -36,8 +36,7 @@ canvas {
 }
 
 p,
-label,
-span {
+label {
   font-size: 14px;
 }
 

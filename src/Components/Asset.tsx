@@ -3,7 +3,6 @@ import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
 import { GraphValues, Period } from "../Model/graph";
-import { ActiveTitle } from "./Asset/ActiveTitle";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -67,23 +66,15 @@ export const Asset = (props: {
 
   return (
     <div style={{ margin: margin + "px" }}>
-      {activeValue ? (
-        <ActiveTitle
-          name={name}
-          image={image}
-          price={activeValue.price}
-          unix={activeValue.unix}
-          period={period}
-        />
-      ) : (
-        <Title
-          symbol={symbol}
-          name={name}
-          image={image}
-          dailyChange={dailyChange}
-          currentPrice={currentPrice}
-        />
-      )}
+      <Title
+        name={name}
+        image={image}
+        price={activeValue ? activeValue.price : currentPrice}
+        unix={activeValue && activeValue.unix}
+        period={period}
+        dailyChange={dailyChange}
+        active={Boolean(activeValue)}
+      />
       <Graph
         symbol={symbol}
         values={values}
