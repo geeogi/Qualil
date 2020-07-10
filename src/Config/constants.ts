@@ -53,6 +53,7 @@ export const PERIODS: Period[] = [
   {
     value: "max",
     title: "All",
+    step: { multiplier: 1, unit: "y", max: 7 },
     format: "'YY",
   },
 ];

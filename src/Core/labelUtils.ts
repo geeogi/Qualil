@@ -23,10 +23,7 @@ export const getPriceLabels = (prices: number[]) => {
  * @param unixTimestamps
  */
 export const getDateLabels = (unixTimestamps: number[], period: Period) => {
-  const max = period.step ? period.step.max : 7;
-  const multiplier = period.step ? period.step.multiplier : 1;
-  const unit = period.step ? period.step.unit : "y";
-
+  const { max, multiplier, unit } = period.step;
   const labels = [];
 
   const start = dayjs(unixTimestamps[0]);

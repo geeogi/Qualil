@@ -16,7 +16,7 @@ export type Period = {
   title: string;
   value: string;
   days?: number;
-  step?: {
+  step: {
     multiplier: number;
     unit: OpUnitType;
     max: number;
