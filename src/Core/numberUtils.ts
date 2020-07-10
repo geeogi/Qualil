@@ -62,6 +62,9 @@ export const abbreviate = (num: number) => {
 export const numberToString = (x: number) => {
   if (x > 1000000) {
     return abbreviate(x);
+  } else if (x > 10) {
+    const rounded = Math.round(x * 10) / 10;
+    return rounded.toLocaleString();
   } else {
     return x.toLocaleString();
   }
