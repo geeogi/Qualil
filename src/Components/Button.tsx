@@ -5,11 +5,7 @@ export const Button = (props: {
   disabled: boolean;
   onClick: () => void;
 }) => (
-  <button
-    style={{ margin: "2px" }}
-    disabled={props.disabled}
-    onClick={props.onClick}
-  >
+  <button disabled={props.disabled} onClick={props.onClick}>
     {props.children}
   </button>
 );

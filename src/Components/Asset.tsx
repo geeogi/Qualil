@@ -26,7 +26,7 @@ export const Asset = (props: {
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
   /**
-   * Fetches and sets coin data on load and whenever `days` changes
+   * Fetch and set coin data on load and whenever `days` changes
    */
   useEffect(() => {
     setIsLoading(true);
@@ -41,10 +41,16 @@ export const Asset = (props: {
       });
   }, [coin, period]);
 
+  /**
+   * Render fixed size div while component is loading or in error state
+   */
   if (!info || !values) {
     return (
       <div
-        style={{ width: graphWidth + 32, height: graphHeight + 32 + 60 + 32 }}
+        style={{
+          width: graphWidth + 2 * margin,
+          height: graphHeight + 2 * margin + 60 + 32,
+        }}
       >
         {error && (
           <p>An error occurred when connecting to CoinGecko: {error.message}</p>
@@ -65,7 +71,7 @@ export const Asset = (props: {
   const positivePeriod = values[0].price < values[values.length - 1].price;
 
   return (
-    <div style={{ margin: margin + "px", marginTop: "24px" }}>
+    <div style={{ margin: margin + "px" }}>
       <Title
         name={name}
         symbol={symbol}
@@ -88,14 +94,7 @@ export const Asset = (props: {
         loading={isLoading}
         setActiveValue={setActiveValue}
       />
-      <div
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          width: graphWidth,
-          margin: "8px 0",
-        }}
-      >
+      <div className="flex-wrap my8" style={{ width: graphWidth }}>
         <div style={{ width: `${graphWidth / 2}px` }}>
           <Attribute attrib="Mkt cap" value={`$${numberToString(marketCap)}`} />
         </div>

@@ -1,13 +1,12 @@
 import React, { useState } from "react";
 import { Asset } from "./Components/Asset";
 import { Button } from "./Components/Button";
-import { ATTRIBUTE_COLOUR } from "./Config/colors";
 import { COINS, PERIODS } from "./Config/constants";
 
 const CONTAINER_PADDING = 16;
 const GRAPH_MARGIN = window.innerWidth < 700 ? 0 : 16;
 
-function App() {
+const App = () => {
   const [period, setPeriod] = useState(PERIODS[0]);
 
   const containerWidth = window.innerWidth - CONTAINER_PADDING * 2;
@@ -17,10 +16,8 @@ function App() {
 
   return (
     <div style={{ padding: CONTAINER_PADDING + "px" }}>
-      <h1 style={{ margin: 0 }}>CoinTales</h1>
-      <p style={{ margin: "0px 0px 16px 0px", color: ATTRIBUTE_COLOUR }}>
-        Powered by CoinGecko
-      </p>
+      <h1 className="ma0">CoinTales</h1>
+      <p className="ma0 mb16 attribute">Powered by CoinGecko</p>
       {PERIODS.map((option) => (
         <Button
           key={option.title}
@@ -30,13 +27,7 @@ function App() {
           {option.title}
         </Button>
       ))}
-      <main
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          justifyContent: "space-around",
-        }}
-      >
+      <main>
         {COINS.map((coin) => (
           <Asset
             key={coin}
@@ -51,6 +42,6 @@ function App() {
       <footer>© 2020 CoinTales</footer>
     </div>
   );
-}
+};
 
 export default App;

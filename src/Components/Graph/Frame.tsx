@@ -7,12 +7,8 @@ export const Frame = (props: {
   height: number;
 }) => (
   <div
-    style={{
-      position: "relative",
-      width: props.width + "px",
-      height: props.height + "px",
-      userSelect: "none",
-    }}
+    className="relative non-select"
+    style={{ width: props.width + "px", height: props.height + "px" }}
   >
     {props.loading ? "loading..." : props.children}
   </div>

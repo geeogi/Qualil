@@ -36,14 +36,13 @@ export const Title = (props: {
 
   return (
     <div
+      className="flex-wrap"
       style={{
-        display: "flex",
         justifyContent: "space-between",
         alignItems: "center",
-        flexWrap: "wrap",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center" }}>
+      <div className="flex-wrap" style={{ alignItems: "center" }}>
         <img
           src={image}
           alt={name}

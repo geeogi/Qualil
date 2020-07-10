@@ -31,8 +31,8 @@ export const Graph = (props: {
     { canvasX: number; canvasY: number }[]
   >();
   const [activePoint, setActivePoint] = useState<{
-    left: number;
-    top: number;
+    canvasX: number;
+    canvasY: number;
   }>();
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -48,7 +48,7 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
-  // Use the neutral colour while active
+  // Use the neutral colour when in active state
   const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
 
   /**
@@ -127,9 +127,9 @@ export const Graph = (props: {
         );
 
         // Set active state
-        const left = toCanvasX(toGraphX(x));
-        const top = toCanvasY(toGraphY(y));
-        setActivePoint({ left, top });
+        const canvasX = toCanvasX(toGraphX(x));
+        const canvasY = toCanvasY(toGraphY(y));
+        setActivePoint({ canvasX, canvasY });
         setActiveValue({ price, unix });
       } else {
         // Reset active state
@@ -137,7 +137,16 @@ export const Graph = (props: {
         setActiveValue(undefined);
       }
     }, canvasElement);
-  }, [values, loading, canvasRef, width, height, period, symbol, setActiveValue]);
+  }, [
+    values,
+    loading,
+    canvasRef,
+    width,
+    height,
+    period,
+    symbol,
+    setActiveValue,
+  ]);
 
   /**
    * Draw the graph every render
@@ -174,9 +183,7 @@ export const Graph = (props: {
   });
 
   return (
-    <div
-      style={{ position: "relative", height: height + 24, userSelect: "none" }}
-    >
+    <div className="relative non-select" style={{ height: height + 24 }}>
       <Frame width={width} height={height} loading={loading}>
         {xLabels?.map(({ left, unix }) => (
           <VerticalGridLine left={left} key={`${symbol}-${unix.toString()}`} />
@@ -195,14 +202,14 @@ export const Graph = (props: {
         {activePoint && (
           <>
             <ActiveLine
-              left={activePoint.left}
+              left={activePoint.canvasX}
               color={colors.COLOR}
               width={2}
             />
             <ActiveCircle
               size={18}
-              left={activePoint.left}
-              top={activePoint.top}
+              left={activePoint.canvasX}
+              top={activePoint.canvasY}
               color={colors.COLOR}
             />
           </>
