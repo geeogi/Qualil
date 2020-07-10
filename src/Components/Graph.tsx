@@ -22,7 +22,7 @@ export const Graph = (props: {
   height: number;
   period: Period;
   change: ChangeSince24H;
-  name: string;
+  symbol: string;
   setActiveValue: (active: { price: number; unix: number } | undefined) => void;
 }) => {
   const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
@@ -40,7 +40,7 @@ export const Graph = (props: {
   const {
     values,
     change,
-    name,
+    symbol,
     loading,
     width,
     height,
@@ -137,7 +137,7 @@ export const Graph = (props: {
         setActiveValue(undefined);
       }
     }, canvasElement);
-  }, [values, loading, canvasRef, width, height, period, name, setActiveValue]);
+  }, [values, loading, canvasRef, width, height, period, symbol, setActiveValue]);
 
   /**
    * Draw the graph every render
@@ -179,14 +179,14 @@ export const Graph = (props: {
     >
       <Frame width={width} height={height} loading={loading}>
         {xLabels?.map(({ left, unix }) => (
-          <VerticalGridLine left={left} key={`${name}-${unix.toString()}`} />
+          <VerticalGridLine left={left} key={`${symbol}-${unix.toString()}`} />
         ))}
         {yLabels?.map(({ top, price }) => (
-          <HorizontalGridLine top={top} key={`${name}-${price.toString()}`} />
+          <HorizontalGridLine top={top} key={`${symbol}-${price.toString()}`} />
         ))}
         {yLabels?.map(({ price, top }) => (
           <Label
-            key={`${name}-${price.toString()}`}
+            key={`${symbol}-${price.toString()}`}
             text={numberWithSignificantDigits(price)}
             top={top}
             left={0}
@@ -212,7 +212,7 @@ export const Graph = (props: {
       {!loading &&
         xLabels?.map(({ unix, left }) => (
           <Label
-            key={`${name}-${unix.toString()}`}
+            key={`${symbol}-${unix.toString()}`}
             text={dayjs(unix).format(period.labelFormat)}
             top={height}
             left={left}

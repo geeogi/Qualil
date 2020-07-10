@@ -56,6 +56,7 @@ export const Asset = (props: {
 
   const currentPrice = info.market_data.current_price["usd"];
   const dailyChange = info.market_data.price_change_24h_in_currency["usd"];
+  const symbol = info.symbol.toUpperCase();
   const name = info.name;
   const image = info.image.small;
   const marketCap = info.market_data.market_cap["usd"];
@@ -76,6 +77,7 @@ export const Asset = (props: {
         />
       ) : (
         <Title
+          symbol={symbol}
           name={name}
           image={image}
           dailyChange={dailyChange}
@@ -83,7 +85,7 @@ export const Asset = (props: {
         />
       )}
       <Graph
-        name={name}
+        symbol={symbol}
         values={values}
         width={graphWidth}
         height={graphHeight}

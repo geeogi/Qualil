@@ -13,6 +13,7 @@ export interface CoinInfo {
   };
   image: { small: string };
   name: string;
+  symbol: string;
 }
 
 export interface CoinHistory {

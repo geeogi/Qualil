@@ -1,13 +1,15 @@
 import React from "react";
-import { COLORS } from "../../Config/colors";
+import { ATTRIBUTE_COLOUR, COLORS } from "../../Config/colors";
+import { numberToString } from "../../Core/numberUtils";
 
 export const Title = (props: {
-  name: string;
+  symbol: string;
   image: string;
   currentPrice: number;
   dailyChange: number;
+  name: string;
 }) => {
-  const { name, image, currentPrice, dailyChange } = props;
+  const { symbol, image, name, currentPrice, dailyChange } = props;
 
   const price24HoursAgo = currentPrice + dailyChange;
   const dailyChangeDivision = Math.abs(dailyChange / price24HoursAgo);
@@ -18,23 +20,30 @@ export const Title = (props: {
   const sign = dailyChange >= 0 ? "+" : "-";
 
   return (
-    <div style={{ display: "flex", alignItems: "center" }}>
-      <img
-        src={image}
-        alt={name}
-        style={{ padding: "4px" }}
-        width="33px"
-        height="33px"
-      ></img>
-      <h3>
-        <span>
-          {name} ${currentPrice}{" "}
-          <span style={{ color, fontSize: "14px" }}>
-            {sign}
-            {dailyChangePercent}%
-          </span>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <img
+          src={image}
+          alt={symbol}
+          style={{ padding: "4px" }}
+          width="33px"
+          height="33px"
+        ></img>
+        <h3>
+          {name} ${numberToString(currentPrice)}{" "}
+        </h3>
+        <span style={{ color, fontSize: "14px", marginLeft: "8px" }}>
+          {sign}
+          {dailyChangePercent}%
         </span>
-      </h3>
+      </div>
+      <p style={{ color: ATTRIBUTE_COLOUR, fontWeight: "bold" }}>{symbol}</p>
     </div>
   );
 };

@@ -9,6 +9,7 @@ export const ActiveTitle = (props: {
   unix: number;
   image: string;
   name: string;
+
   period: Period;
 }) => {
   const { price, unix, image, name, period } = props;
@@ -29,9 +30,13 @@ export const ActiveTitle = (props: {
           width="33px"
           height="33px"
         ></img>
-        <h3>${numberToString(price)}</h3>
+        <h3>
+          {name} ${numberToString(price)}
+        </h3>
       </div>
-      <span style={{ color: CONTRAST_COLOUR, fontSize: "14px" }}>
+      <span
+        style={{ color: CONTRAST_COLOUR, fontSize: "14px", fontWeight: "bold" }}
+      >
         {dayjs(unix).format(period.scrubFormat)}
       </span>
     </div>
