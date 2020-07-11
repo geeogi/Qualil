@@ -16,8 +16,8 @@ const App = () => {
 
   return (
     <div style={{ padding: CONTAINER_PADDING + "px" }}>
-      <h1 className="ma0">CoinTales</h1>
-      <p className="ma0 mb16 attribute">Powered by CoinGecko</p>
+      <h1 className="ma0">qualil</h1>
+      <p className="ma0 mb16 attribute">Real time analytics powered by CoinGecko.</p>
       {PERIODS.map((option) => (
         <Button
           key={option.title}
@@ -39,7 +39,7 @@ const App = () => {
           />
         ))}
       </main>
-      <footer>© 2020 CoinTales</footer>
+      <footer>© 2020 qualil</footer>
     </div>
   );
 };
