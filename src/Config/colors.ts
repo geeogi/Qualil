@@ -6,15 +6,15 @@ export const COLORS = {
     },
   },
   NEGATIVE: {
-    COLOR: "rgb(217, 64, 64)",
+    COLOR: "rgb(236, 77, 61)",
     COLOR_ALPHA: (opacity: number) => {
-      return `rgba(217, 64, 64, ${opacity})`;
+      return `rgba(236, 77, 61, ${opacity})`;
     },
   },
   NEUTRAL: {
-    COLOR: "rgb(102, 153, 204)",
+    COLOR: "rgb(117, 198, 245)",
     COLOR_ALPHA: (opacity: number) => {
-      return `rgba(102, 153, 204, ${opacity})`;
+      return `rgba(117, 198, 245, ${opacity})`;
     },
   },
 };
