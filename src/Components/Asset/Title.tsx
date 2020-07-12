@@ -50,9 +50,9 @@ export const Title = (props: {
           width="33px"
           height="33px"
         ></img>
-        <h3>
+        <h2>
           {window.innerWidth < 1000 ? symbol : name} ${numberToString(price)}
-        </h3>
+        </h2>
       </div>
       <div style={{ marginLeft: "auto", textAlign: "right" }}>
         {!active && (
