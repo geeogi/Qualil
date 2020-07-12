@@ -25,6 +25,194 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <title>Qualil</title>
+    <style>
+      :root {
+        --background-color: #111111;
+        --header-color: #222222;
+        --contrast-color: #fafafa;
+        --axis-color: #333333;
+        --attribute-color: #999999;
+        --accent-color: #1652f0;
+        --small-font: 14px;
+      }
+
+      body {
+        margin: 0;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        background-color: var(--background-color);
+        color: var(--contrast-color);
+      }
+
+      h1 {
+        font-size: 24px;
+      }
+
+      main {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+
+      code {
+        font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
+          monospace;
+      }
+
+      canvas {
+        width: 100%;
+        height: 100%;
+        z-index: 1;
+        user-select: none;
+      }
+
+      label {
+        font-size: var(--small-font);
+      }
+
+      header {
+        background-color: var(--header-color);
+        border-bottom: solid 1px var(--axis-color);
+        margin-bottom: 16px;
+      }
+
+      footer {
+        border-top: solid 1px var(--accent-color);
+      }
+
+      button {
+        background-color: var(--axis-color);
+        font-size: var(--small-font);
+        border: none;
+        border-radius: 3px;
+        margin: 2px;
+        color: var(--contrast-color);
+        min-width: 40px;
+        min-height: 24px;
+      }
+
+      button:disabled {
+        background-color: var(--attribute-color);
+        color: var(--background-color);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      .ma0 {
+        margin: 0;
+      }
+
+      .mb16 {
+        margin-bottom: 16px;
+      }
+
+      .my8 {
+        margin: 8px 0;
+      }
+
+      .m16 {
+        margin: 16px;
+      }
+
+      .p16 {
+        padding: 16px;
+      }
+
+      .p32 {
+        padding: 32px;
+      }
+
+      .small-font {
+        font-size: var(--small-font);
+      }
+
+      .flex-wrap {
+        display: flex;
+        flex-wrap: wrap;
+      }
+
+      .non-select {
+        user-select: none;
+      }
+
+      .relative {
+        position: relative;
+      }
+
+      .attribute {
+        color: var(--attribute-color);
+      }
+
+      .accent {
+        color: var(--accent-color);
+      }
+      
+      .ActiveLine {
+        height: 100%;
+        width: 1px;
+        position: absolute;
+        z-index: 1;
+        pointer-events: none;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .ActiveCircle {
+        position: absolute;
+        border-radius: 50%;
+        border: solid 2px var(--background-color);
+        z-index: 2;
+        pointer-events: none;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .HorizontalGridLine {
+        width: 100%;
+        height: 1px;
+        position: absolute;
+        z-index: -1;
+        user-select: none;
+      }
+
+      .VerticalGridLine {
+        height: 100%;
+        width: 1px;
+        position: absolute;
+        z-index: -1;
+        user-select: none;
+      }
+
+      .Label {
+        position: absolute;
+        padding: 1px 3px;
+        margin-top: 1px;
+        border-radius: 0 3px 3px 0;
+        pointer-events: none;
+        user-select: none;
+        touch-action: none;
+      }
+
+      .Title {
+        background: #000;
+        color: #fff;
+        padding: 8px;
+        border-radius: 8px;
+      }
+
+      .Icon {
+        background: var(--accent-color);
+        color: var(--background-color);
+        padding: 0 4px;
+        border-radius: 8px;
+        margin-left: auto;
+      }
+    </style>
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
