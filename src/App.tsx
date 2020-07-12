@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { Asset } from "./Components/Asset";
 import { Button } from "./Components/Button";
+import { Footer } from "./Components/Footer";
+import { Header } from "./Components/Header";
 import { COINS, PERIODS } from "./Config/constants";
 
 const CONTAINER_PADDING = 16;
@@ -15,32 +17,33 @@ const App = () => {
   const graphHeight = Math.floor((9 / 16) * graphWidth);
 
   return (
-    <div style={{ padding: CONTAINER_PADDING + "px" }}>
-      <h1 className="ma0">qualil</h1>
-      <p className="ma0 mb16 attribute">Real time analytics powered by CoinGecko.</p>
-      {PERIODS.map((option) => (
-        <Button
-          key={option.title}
-          onClick={() => setPeriod(option)}
-          disabled={period.value === option.value}
-        >
-          {option.title}
-        </Button>
-      ))}
-      <main>
-        {COINS.map((coin) => (
-          <Asset
-            key={coin}
-            coin={coin}
-            graphWidth={graphWidth}
-            graphHeight={graphHeight}
-            margin={GRAPH_MARGIN}
-            period={period}
-          />
+    <>
+      <Header />
+      <div style={{ padding: CONTAINER_PADDING + "px" }}>
+        {PERIODS.map((option) => (
+          <Button
+            key={option.title}
+            onClick={() => setPeriod(option)}
+            disabled={period.value === option.value}
+          >
+            {option.title}
+          </Button>
         ))}
-      </main>
-      <footer>© 2020 qualil</footer>
-    </div>
+        <main>
+          {COINS.map((coin) => (
+            <Asset
+              key={coin}
+              coin={coin}
+              graphWidth={graphWidth}
+              graphHeight={graphHeight}
+              margin={GRAPH_MARGIN}
+              period={period}
+            />
+          ))}
+        </main>
+      </div>
+      <Footer />
+    </>
   );
 };
 

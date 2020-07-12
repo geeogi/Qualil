@@ -11,9 +11,11 @@
  */
 :root {
   --background-color: #111111;
-  --contrast-color: white;
+  --header-color: #222222;
+  --contrast-color: #fafafa;
   --axis-color: #333333;
   --attribute-color: #999999;
+  --accent-color: #1652f0;
   --small-font: 14px;
 }
 
@@ -26,6 +28,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: var(--background-color);
   color: var(--contrast-color);
+}
+
+h1 {
+  font-size: 24px;
 }
 
 main {
@@ -46,9 +52,18 @@ canvas {
   user-select: none;
 }
 
-p,
 label {
   font-size: var(--small-font);
+}
+
+header {
+  background-color: var(--header-color);
+  border-bottom: solid 1px var(--axis-color);
+  margin-bottom: 16px;
+}
+
+footer {
+  border-top: solid 1px var(--accent-color);
 }
 
 button {
@@ -86,6 +101,18 @@ button:disabled {
   margin: 8px 0;
 }
 
+.m16 {
+  margin: 16px;
+}
+
+.p16 {
+  padding: 16px;
+}
+
+.p32 {
+  padding: 32px;
+}
+
 .small-font {
   font-size: var(--small-font);
 }
@@ -105,6 +132,10 @@ button:disabled {
 
 .attribute {
   color: var(--attribute-color);
+}
+
+.accent {
+  color: var(--accent-color);
 }
 
 /**
@@ -154,4 +185,19 @@ button:disabled {
   pointer-events: none;
   user-select: none;
   touch-action: none;
+}
+
+.Title {
+  background: #000;
+  color: #fff;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+.Icon {
+  background: var(--accent-color);
+  color: var(--background-color);
+  padding: 0 4px;
+  border-radius: 8px;
+  margin-left: auto;
 }
