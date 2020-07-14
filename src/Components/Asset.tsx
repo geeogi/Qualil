@@ -26,34 +26,51 @@ export const Asset = (props: {
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
   /**
-   * Fetch and set coin data on load and whenever `days` changes
+   * Fetch and set coin data on load and whenever `period` changes
    */
   useEffect(() => {
     setIsLoading(true);
-    Promise.all([getCoinInfo(coin), getCoinHistoricalData(coin, period.value)])
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    Promise.all([
+      getCoinInfo(coin, signal),
+      getCoinHistoricalData(coin, period.value, signal),
+    ])
       .then(([info, values]) => {
         setValues(values);
         setInfo(info);
-      })
-      .catch(setError)
-      .finally(() => {
         setIsLoading(false);
+      })
+      .catch((e) => {
+        if (e.name !== "AbortError") {
+          setError(e);
+          setIsLoading(false);
+        }
       });
+
+    return () => {
+      abortController.abort();
+      setError(undefined);
+    };
   }, [coin, period]);
 
   /**
    * Render fixed size div while component is loading or in error state
    */
-  if (!info || !values) {
+  if (!info || !values || error) {
     return (
       <div
+        className="m16"
         style={{
-          width: graphWidth + 2 * margin,
-          height: graphHeight + 2 * margin + 60 + 32,
+          width: graphWidth,
+          height: graphHeight + 60 + 32,
         }}
       >
         {error && (
-          <p>An error occurred when connecting to CoinGecko: {error.message}</p>
+          <p className="p16">
+            Sorry, an error occurred fetching data for {coin}. Please refresh
+            the page or try again later. {error.message}.
+          </p>
         )}
       </div>
     );
