@@ -14,8 +14,11 @@ export const Asset = (props: {
   margin: number;
   period: Period;
 }) => {
-  const [values, setValues] = useState<GraphValues>();
   const [info, setInfo] = useState<CoinInfo>();
+  const [historicalData, setHistoricalData] = useState<{
+    period: Period;
+    values: GraphValues;
+  }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [activeValue, setActiveValue] = useState<{
@@ -37,7 +40,7 @@ export const Asset = (props: {
       getCoinHistoricalData(coin, period.value, signal),
     ])
       .then(([info, values]) => {
-        setValues(values);
+        setHistoricalData({ period, values });
         setInfo(info);
         setIsLoading(false);
       })
@@ -57,7 +60,7 @@ export const Asset = (props: {
   /**
    * Render fixed size div while component is loading or in error state
    */
-  if (!info || !values || error) {
+  if (!info || !historicalData || error) {
     return (
       <div
         className="m16"
@@ -69,7 +72,7 @@ export const Asset = (props: {
         {error && (
           <p className="p16">
             Sorry, an error occurred fetching data for {coin}. Please refresh
-            the page or try again later. {error.message}.
+            the page or try again later. {error.name}.
           </p>
         )}
       </div>
@@ -85,6 +88,7 @@ export const Asset = (props: {
   const ath = info.market_data.ath["usd"];
   const atl = info.market_data.atl["usd"];
   const totalVolume = info.market_data.total_volume["usd"];
+  const { values } = historicalData;
   const positivePeriod = values[0].price < values[values.length - 1].price;
 
   return (
@@ -104,7 +108,7 @@ export const Asset = (props: {
         values={values}
         width={graphWidth}
         height={graphHeight}
-        period={period}
+        period={historicalData.period}
         change={
           positivePeriod ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
         }
