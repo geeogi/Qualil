@@ -51,6 +51,9 @@ export const Asset = (props: {
         }
       });
 
+    /**
+     * Abort pending fetch requests during cleanup
+     */
     return () => {
       abortController.abort();
       setError(undefined);
@@ -98,7 +101,7 @@ export const Asset = (props: {
         symbol={symbol}
         image={image}
         price={activeValue ? activeValue.price : currentPrice}
-        unix={activeValue && activeValue.unix}
+        unix={activeValue ? activeValue.unix : undefined}
         period={period}
         dailyChange={dailyChange}
         active={Boolean(activeValue)}

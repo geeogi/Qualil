@@ -34,9 +34,9 @@ export const Graph = (props: {
     canvasX: number;
     canvasY: number;
   }>();
+
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
-  // Parse props
   const {
     values,
     change,
@@ -52,7 +52,7 @@ export const Graph = (props: {
   const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
 
   /**
-   * Configure the graph when canvas loads and whenever `values` changes
+   * Setup the graph when canvas loads and whenever `values` changes
    */
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -65,7 +65,7 @@ export const Graph = (props: {
       (_, index) => index % Math.ceil(values.length / width) === 0
     );
 
-    // Setup graph values
+    // Configure graph values
     const {
       points,
       dateLabels,
@@ -115,28 +115,39 @@ export const Graph = (props: {
     setScaledPoints(scaledPoints);
 
     // Add interactivity handlers
-    addInteractivityHandlers(({ activeX }) => {
-      if (activeX) {
-        // Scale activeX to [-1,1]
-        const activeClipSpaceX = (activeX / width) * 2 - 1;
+    const cleanupInteractivityHandlers = addInteractivityHandlers(
+      ({ activeX }) => {
+        if (activeX) {
+          // Scale activeX to [-1,1]
+          const activeClipSpaceX = (activeX / width) * 2 - 1;
 
-        // Fetch nearest point to activeX
-        const [{ x, y, price, unix }] = [...points].sort(
-          (a, b) =>
-            Math.abs(a.x - activeClipSpaceX) - Math.abs(b.x - activeClipSpaceX)
-        );
+          // Fetch nearest point to activeX
+          const [{ x, y, price, unix }] = [...points].sort(
+            (a, b) =>
+              Math.abs(a.x - activeClipSpaceX) -
+              Math.abs(b.x - activeClipSpaceX)
+          );
 
-        // Set active state
-        const canvasX = toCanvasX(toGraphX(x));
-        const canvasY = toCanvasY(toGraphY(y));
-        setActivePoint({ canvasX, canvasY });
-        setActiveValue({ price, unix });
-      } else {
-        // Reset active state
-        setActivePoint(undefined);
-        setActiveValue(undefined);
-      }
-    }, canvasElement);
+          // Set active state
+          const canvasX = toCanvasX(toGraphX(x));
+          const canvasY = toCanvasY(toGraphY(y));
+          setActivePoint({ canvasX, canvasY });
+          setActiveValue({ price, unix });
+        } else {
+          // Reset active state
+          setActivePoint(undefined);
+          setActiveValue(undefined);
+        }
+      },
+      canvasElement
+    );
+
+    // Unset labels and event listeners on cleanup
+    return () => {
+      setXLabels(undefined);
+      setYLabels(undefined);
+      cleanupInteractivityHandlers();
+    };
   }, [
     values,
     loading,
