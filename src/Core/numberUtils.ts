@@ -69,35 +69,3 @@ export const numberToString = (x: number) => {
     return x.toLocaleString();
   }
 };
-
-/**
- * `#000` => {r:0, g:0, b:0}
- * @param hex
- */
-export const hexToRgb = (hex: string) => {
-  // Strip whitespace
-  hex = hex.replace(" ", "");
-
-  // Validate Hex
-  if (!(hex.length === 4 || hex.length === 7)) {
-    throw new Error(`Unexpected hex length for hex: ${hex}`);
-  }
-
-  // Normalise short form hex
-  if (hex.length === 4) {
-    hex = `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}`;
-  }
-
-  // Decode hex
-  const decoded = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-
-  if (!decoded) {
-    throw new Error(`Could not decode hex: ${hex}`);
-  }
-
-  return {
-    r: parseInt(decoded[1], 16),
-    g: parseInt(decoded[2], 16),
-    b: parseInt(decoded[3], 16),
-  };
-};

@@ -18,12 +18,3 @@ export const COLORS = {
     },
   },
 };
-
-/**
- * Fetch CSS variables from the Document
- */
-const style = getComputedStyle(document.documentElement);
-export const BACKGROUND_COLOR = style.getPropertyValue("--background-color");
-export const CONTRAST_COLOUR = style.getPropertyValue("--contrast-color");
-export const ATTRIBUTE_COLOUR = style.getPropertyValue("--attribute-color");
-export const AXIS_COLOUR = style.getPropertyValue("--axis-color");
