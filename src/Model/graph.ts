@@ -1,9 +1,11 @@
 import { OpUnitType } from "dayjs";
 
-export type GraphValues = {
+export type GraphValue = {
   price: number;
   unix: number;
-}[];
+};
+
+export type GraphValues = GraphValue[];
 
 export type GraphPoints = {
   x: number;
@@ -30,7 +32,4 @@ export type HistoricalData = {
   values: GraphValues;
 };
 
-export type ActiveValue = {
-  price: number;
-  unix: number;
-};
+export type CanvasPoint = { canvasX: number; canvasY: number };

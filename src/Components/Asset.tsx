@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
-import { ActiveValue, HistoricalData, Period } from "../Model/graph";
+import { GraphValue, HistoricalData, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -19,7 +19,7 @@ export const Asset = (props: {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [historicalData, setHistoricalData] = useState<HistoricalData>();
-  const [activeValue, setActiveValue] = useState<ActiveValue>();
+  const [activeValue, setActiveValue] = useState<GraphValue>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
@@ -115,16 +115,16 @@ export const Asset = (props: {
         setActiveValue={setActiveValue}
       />
       <div className="flex-wrap my8" style={{ width: graphWidth }}>
-        <div style={{ width: `${graphWidth / 2}px` }}>
+        <div style={{ width: graphWidth / 2 + "px" }}>
           <Attribute attrib="Mkt cap" value={`$${numberToString(marketCap)}`} />
         </div>
-        <div style={{ width: `${graphWidth / 2}px` }}>
+        <div style={{ width: graphWidth / 2 + "px" }}>
           <Attribute attrib="ATH" value={`$${numberToString(ath)}`} />
         </div>
-        <div style={{ width: `${graphWidth / 2}px` }}>
+        <div style={{ width: graphWidth / 2 + "px" }}>
           <Attribute attrib="ATL" value={`$${numberToString(atl)}`} />
         </div>
-        <div style={{ width: `${graphWidth / 2}px` }}>
+        <div style={{ width: graphWidth / 2 + "px" }}>
           <Attribute attrib="Vol" value={`$${numberToString(totalVolume)}`} />
         </div>
       </div>

@@ -11,7 +11,7 @@ export const COLORS = {
       return `rgba(236, 77, 61, ${opacity})`;
     },
   },
-  NEUTRAL: {
+  ACTIVE: {
     COLOR: "rgb(120, 150, 224)",
     COLOR_ALPHA: (opacity: number) => {
       return `rgba(120, 150, 224, ${opacity})`;

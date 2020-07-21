@@ -7,7 +7,7 @@ import { addInteractivityHandlers } from "../Core/eventUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
-import { GraphValues, Period } from "../Model/graph";
+import { CanvasPoint, GraphValues, Period } from "../Model/graph";
 import { ActiveCircle } from "./Graph/ActiveCircle";
 import { ActiveLine } from "./Graph/ActiveLine";
 import { Frame } from "./Graph/Frame";
@@ -27,13 +27,8 @@ export const Graph = (props: {
 }) => {
   const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
   const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
-  const [points, setScaledPoints] = useState<
-    { canvasX: number; canvasY: number }[]
-  >();
-  const [activePoint, setActivePoint] = useState<{
-    canvasX: number;
-    canvasY: number;
-  }>();
+  const [points, setScaledPoints] = useState<CanvasPoint[]>();
+  const [activePoint, setActivePoint] = useState<CanvasPoint>();
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -48,8 +43,8 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
-  // Use the neutral colour when in active state
-  const colors = activePoint ? COLORS.NEUTRAL : COLORS[change];
+  // Use the active colour when in active state
+  const colors = activePoint ? COLORS.ACTIVE : COLORS[change];
 
   /**
    * Setup the graph when canvas loads and whenever `values` changes
@@ -60,7 +55,7 @@ export const Graph = (props: {
       return;
     }
 
-    // Sample values to achieve roughly 1 point per pixel
+    // Sample values to achieve ~1 point per pixel
     const sample = values.filter(
       (_, index) => index % Math.ceil(values.length / width) === 0
     );
