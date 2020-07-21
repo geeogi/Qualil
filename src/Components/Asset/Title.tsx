@@ -62,9 +62,7 @@ export const Title = (props: {
           </span>
         )}
         {active && unix && period && (
-          <span style={{ color: COLORS.NEUTRAL.COLOR }}>
-            {dayjs(unix).format(period.scrubFormat)}
-          </span>
+          <span>{dayjs(unix).format(period.scrubFormat)}</span>
         )}
       </div>
     </div>

@@ -12,9 +12,9 @@ export const COLORS = {
     },
   },
   NEUTRAL: {
-    COLOR: "rgb(117, 198, 245)",
+    COLOR: "rgb(120, 150, 224)",
     COLOR_ALPHA: (opacity: number) => {
-      return `rgba(117, 198, 245, ${opacity})`;
+      return `rgba(120, 150, 224, ${opacity})`;
     },
   },
 };
