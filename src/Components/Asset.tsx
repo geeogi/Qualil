@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
-import { GraphValues, Period } from "../Model/graph";
+import { ActiveValue, HistoricalData, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
+import { LoadingSpinner } from "./LoadingSpinner";
 
 export const Asset = (props: {
   coin: string;
@@ -15,16 +16,10 @@ export const Asset = (props: {
   period: Period;
 }) => {
   const [info, setInfo] = useState<CoinInfo>();
-  const [historicalData, setHistoricalData] = useState<{
-    period: Period;
-    values: GraphValues;
-  }>();
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
-  const [activeValue, setActiveValue] = useState<{
-    price: number;
-    unix: number;
-  }>();
+  const [historicalData, setHistoricalData] = useState<HistoricalData>();
+  const [activeValue, setActiveValue] = useState<ActiveValue>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
@@ -66,17 +61,18 @@ export const Asset = (props: {
   if (!info || !historicalData || error) {
     return (
       <div
-        className="m16"
+        className="m16 center-content"
         style={{
           width: graphWidth,
-          height: graphHeight + 60 + 32,
+          height: graphHeight + 124,
         }}
       >
-        {error && (
+        {error ? (
           <p className="p16">
-            Sorry, an error occurred fetching data for {coin}. Please refresh
-            the page or try again later. {error.name}.
+            Sorry, an error occurred fetching data for {coin}.
           </p>
+        ) : (
+          <LoadingSpinner />
         )}
       </div>
     );

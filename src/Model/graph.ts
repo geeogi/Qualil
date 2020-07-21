@@ -24,3 +24,13 @@ export type Period = {
   labelFormat: string;
   scrubFormat: string;
 };
+
+export type HistoricalData = {
+  period: Period;
+  values: GraphValues;
+};
+
+export type ActiveValue = {
+  price: number;
+  unix: number;
+};

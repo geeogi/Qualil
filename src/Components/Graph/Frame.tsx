@@ -1,4 +1,5 @@
 import React from "react";
+import { LoadingSpinner } from "../LoadingSpinner";
 
 export const Frame = (props: {
   children?: React.ReactNode;
@@ -10,6 +11,6 @@ export const Frame = (props: {
     className="relative non-select"
     style={{ width: props.width + "px", height: props.height + "px" }}
   >
-    {props.loading ? "loading..." : props.children}
+    {props.loading ? <LoadingSpinner /> : props.children}
   </div>
 );
