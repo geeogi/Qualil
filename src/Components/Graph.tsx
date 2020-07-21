@@ -215,7 +215,7 @@ export const Graph = (props: {
             <ActiveLine
               left={activePoint.canvasX}
               color={colors.COLOR}
-              width={2}
+              width={1}
             />
             <ActiveCircle
               size={18}
