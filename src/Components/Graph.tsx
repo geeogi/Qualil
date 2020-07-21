@@ -191,7 +191,7 @@ export const Graph = (props: {
 
     // Draw primary line
     drawLine(ctx, points, colors.COLOR, 2);
-  });
+  }, [colors, points, width, height]);
 
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
