@@ -1,5 +1,6 @@
 import { COINGECKO_BASE_URL, CURRENCY } from "../Config/constants";
 import { CoinHistory, CoinInfo } from "../Model/coin";
+import { HistoricalValue } from "../Model/graph";
 
 export const getCoinHistoricalData = async (
   coin: string,
@@ -9,7 +10,7 @@ export const getCoinHistoricalData = async (
   const url = `${COINGECKO_BASE_URL}/coins/${coin}/market_chart?vs_currency=${CURRENCY}&days=${days}`;
   const response = await fetch(url, { signal });
   const { prices }: CoinHistory = await response.json();
-  return prices.map(([unix, price]) => ({ unix, price }));
+  return prices.map(([unix, price]) => ({ unix, price })) as HistoricalValue[];
 };
 
 export const getCoinInfo = async (coin: string, signal: AbortSignal) => {

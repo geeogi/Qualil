@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
-import { GraphValue, HistoricalData, Period } from "../Model/graph";
+import { HistoricalValue, HistoricalData, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -19,7 +19,7 @@ export const Asset = (props: {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [historicalData, setHistoricalData] = useState<HistoricalData>();
-  const [activeValue, setActiveValue] = useState<GraphValue>();
+  const [activeValue, setActiveValue] = useState<HistoricalValue>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
@@ -62,10 +62,7 @@ export const Asset = (props: {
     return (
       <div
         className="m16 center-content"
-        style={{
-          width: graphWidth,
-          height: graphHeight + 124,
-        }}
+        style={{ width: graphWidth, height: graphHeight + 124 }}
       >
         {error ? (
           <p className="p16">
@@ -89,6 +86,8 @@ export const Asset = (props: {
   const totalVolume = info.market_data.total_volume["usd"];
   const { values } = historicalData;
   const positivePeriod = values[0].price < values[values.length - 1].price;
+  const { POSITIVE, NEGATIVE } = ChangeSince24H;
+  const change = positivePeriod ? POSITIVE : NEGATIVE;
 
   return (
     <div style={{ margin: margin + "px" }}>
@@ -108,9 +107,7 @@ export const Asset = (props: {
         width={graphWidth}
         height={graphHeight}
         period={historicalData.period}
-        change={
-          positivePeriod ? ChangeSince24H.POSITIVE : ChangeSince24H.NEGATIVE
-        }
+        change={change}
         loading={isLoading}
         setActiveValue={setActiveValue}
       />

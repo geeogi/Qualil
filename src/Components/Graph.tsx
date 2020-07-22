@@ -7,7 +7,7 @@ import { addInteractivityHandlers } from "../Core/eventUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
-import { CanvasPoint, GraphValues, Period } from "../Model/graph";
+import { CanvasPoint, HistoricalValue, Period } from "../Model/graph";
 import { ActiveCircle } from "./Graph/ActiveCircle";
 import { ActiveLine } from "./Graph/ActiveLine";
 import { Frame } from "./Graph/Frame";
@@ -16,7 +16,7 @@ import { Label } from "./Graph/Label";
 import { VerticalGridLine } from "./Graph/VerticalGridLine";
 
 export const Graph = (props: {
-  values?: GraphValues;
+  values?: HistoricalValue[];
   loading?: boolean;
   width: number;
   height: number;
@@ -47,7 +47,7 @@ export const Graph = (props: {
   const colors = activePoint ? COLORS.ACTIVE : COLORS[change];
 
   /**
-   * Setup the graph when canvas loads and whenever `values` changes
+   * Set up the graph when canvas loads and whenever `values` changes
    */
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -113,10 +113,10 @@ export const Graph = (props: {
     const cleanupInteractivityHandlers = addInteractivityHandlers(
       ({ activeX }) => {
         if (activeX) {
-          // Scale activeX to [-1,1]
+          // Scale activeX to [-1,1] clip space
           const activeClipSpaceX = (activeX / width) * 2 - 1;
 
-          // Fetch nearest point to activeX
+          // Find nearest point to activeX
           const [{ x, y, price, unix }] = [...points].sort(
             (a, b) =>
               Math.abs(a.x - activeClipSpaceX) -
@@ -155,7 +155,7 @@ export const Graph = (props: {
   ]);
 
   /**
-   * Draw the graph every render
+   * Draw the graph on load and when colors change
    */
   useEffect(() => {
     const canvasElement = canvasRef.current;
@@ -172,7 +172,7 @@ export const Graph = (props: {
     // Clear graph
     ctx.clearRect(0, 0, width, height);
 
-    // Configure gradient util
+    // Configure gradient
     const getGradient = getGradientMethod(ctx, 0, height);
 
     // Draw primary block
