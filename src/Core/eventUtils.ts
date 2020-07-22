@@ -35,7 +35,7 @@ const setTouchedResetTimer = () => {
  */
 export const addInteractivityHandlers = (
   callback: (args: { activeX?: number; activeY?: number }) => void,
-  element: HTMLElement
+  element: HTMLElement | SVGSVGElement
 ) => {
   const handleMouseMove = (e: any) => {
     if (!wasRecentlyTouched) {

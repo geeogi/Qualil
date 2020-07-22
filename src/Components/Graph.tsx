@@ -1,8 +1,6 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
-import { scale2DCanvas } from "../Core/canvasUtils";
-import { drawLine, fillPath, getGradientMethod } from "../Core/drawUtils";
 import { addInteractivityHandlers } from "../Core/eventUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
@@ -30,7 +28,7 @@ export const Graph = (props: {
   const [points, setScaledPoints] = useState<CanvasPoint[]>();
   const [activePoint, setActivePoint] = useState<CanvasPoint>();
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const canvasRef = useRef<SVGSVGElement>(null);
 
   const {
     values,
@@ -68,15 +66,6 @@ export const Graph = (props: {
       scalePriceY,
       scaleUnixX,
     } = getGraphConfig({ values: sample, period });
-
-    // Retrieve canvas context
-    const ctx = canvasElement.getContext("2d");
-    if (!ctx) {
-      throw new Error("Unable to retrieve 2D context");
-    }
-
-    // Scale the canvas for retina displays
-    scale2DCanvas(ctx, canvasElement);
 
     // Utils to convert from clip space [-1,1] to graph coordinates
     const toGraphX = (x: number) => ((x + 1) / 2) * width;
@@ -154,39 +143,9 @@ export const Graph = (props: {
     setActiveValue,
   ]);
 
-  /**
-   * Draw the graph on load and when colors change
-   */
-  useEffect(() => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement || !points) {
-      return;
-    }
-
-    // Retrieve canvas context
-    const ctx = canvasElement.getContext("2d");
-    if (!ctx) {
-      throw new Error("Unable to retrieve 2D context");
-    }
-
-    // Clear graph
-    ctx.clearRect(0, 0, width, height);
-
-    // Configure gradient
-    const getGradient = getGradientMethod(ctx, 0, height);
-
-    // Draw primary block
-    const firstPoint = { canvasX: 0, canvasY: height };
-    const lastPoint = { canvasX: width, canvasY: height };
-    const path = [firstPoint, ...points, lastPoint];
-    const topColor = colors.COLOR_ALPHA(0.6);
-    const bottomColor = colors.COLOR_ALPHA(0);
-    const gradient = getGradient(topColor, bottomColor);
-    fillPath(ctx, path, gradient);
-
-    // Draw primary line
-    drawLine(ctx, points, colors.COLOR, 2);
-  }, [colors, points, width, height]);
+  const pointString = points
+    ?.map((point) => `${point.canvasX},${point.canvasY}`)
+    .join("\n");
 
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
@@ -220,7 +179,40 @@ export const Graph = (props: {
             />
           </>
         )}
-        <canvas ref={canvasRef}></canvas>
+        <svg viewBox={`0 0 ${width} ${height}`} ref={canvasRef}>
+          <defs>
+            <linearGradient
+              id={`${symbol}-gradient`}
+              x1="0%"
+              y1="0%"
+              x2="0%"
+              y2="100%"
+            >
+              <stop
+                offset="0%"
+                style={{ stopColor: colors.COLOR_ALPHA(0.3), stopOpacity: 1 }}
+              />
+              <stop
+                offset="100%"
+                style={{ stopColor: "var(--background-color)", stopOpacity: 1 }}
+              />
+            </linearGradient>
+          </defs>
+          <polygon
+            fill={`url(#${symbol}-gradient`}
+            points={`
+              0,${height}
+              ${pointString}
+              ${width},${height}
+            `}
+          />
+          <polyline
+            fill="none"
+            stroke={colors.COLOR}
+            stroke-width="2"
+            points={pointString}
+          />
+        </svg>
       </Frame>
       {!loading &&
         xLabels?.map(({ unix, left }) => (
