@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button } from "./Button";
 
 export const Footer = () => {
@@ -7,40 +7,35 @@ export const Footer = () => {
     window.matchMedia("(prefers-color-scheme: dark)").matches;
   const [isLight, setIsLight] = useState(!userPrefersDarkMode);
 
-  const darkMode = () => {
-    [
-      ["--background-color", "#111111"],
-      ["--translucent-background-color", "rgba(17, 17, 17, 0.5)"],
-      ["--header-color", "#222222"],
-      ["--contrast-color", "#fafafa"],
-      ["--axis-color", "#333333"],
-      ["--attribute-color", "#999999"],
-      ["--accent-color", "#1652f0"],
-      ["--small-font", "14px"],
-      ["--is-light", " 0"],
-    ].forEach((prop) => {
-      document.documentElement.style.setProperty(prop[0], prop[1]);
-    });
-
-    setIsLight(false);
-  };
-
-  const lightMode = () => {
-    [
-      ["--background-color", "#fff"],
-      ["--translucent-background-color", "rgba(255, 255, 255, 0.5)"],
-      ["--header-color", "#fafafa"],
-      ["--contrast-color", "#111"],
-      ["--axis-color", "rgb(230, 230, 230)"],
-      ["--attribute-color", "#333"],
-      ["--accent-color", "#1652f0"],
-      ["--small-font", "14px"],
-      ["--is-light", " 1"],
-    ].forEach((prop) => {
-      document.documentElement.style.setProperty(prop[0], prop[1]);
-    });
-    setIsLight(true);
-  };
+  useEffect(() => {
+    if (isLight) {
+      [
+        ["--background-color", "#fff"],
+        ["--translucent-background-color", "rgba(255, 255, 255, 0.5)"],
+        ["--header-color", "#fafafa"],
+        ["--contrast-color", "#111"],
+        ["--axis-color", "rgb(230, 230, 230)"],
+        ["--attribute-color", "#333"],
+        ["--accent-color", "#1652f0"],
+        ["--small-font", "14px"],
+      ].forEach((prop) => {
+        document.documentElement.style.setProperty(prop[0], prop[1]);
+      });
+    } else {
+      [
+        ["--background-color", "#111111"],
+        ["--translucent-background-color", "rgba(17, 17, 17, 0.5)"],
+        ["--header-color", "#222222"],
+        ["--contrast-color", "#fafafa"],
+        ["--axis-color", "#333333"],
+        ["--attribute-color", "#999999"],
+        ["--accent-color", "#1652f0"],
+        ["--small-font", "14px"],
+      ].forEach((prop) => {
+        document.documentElement.style.setProperty(prop[0], prop[1]);
+      });
+    }
+  });
 
   return (
     <footer>
@@ -55,10 +50,10 @@ export const Footer = () => {
               Qualil is a cryptocurrency analytics platform powered by
               CoinGecko.
             </p>
-            <Button disabled={!isLight} onClick={darkMode}>
+            <Button disabled={!isLight} onClick={() => setIsLight(false)}>
               Dark
             </Button>
-            <Button disabled={isLight} onClick={lightMode}>
+            <Button disabled={isLight} onClick={() => setIsLight(true)}>
               Light
             </Button>
           </div>
