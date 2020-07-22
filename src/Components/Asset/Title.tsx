@@ -28,7 +28,7 @@ export const Title = (props: {
 
   const { POSITIVE, NEGATIVE } = ChangeSince24H;
   const change = dailyChange >= 0 ? POSITIVE : NEGATIVE;
-  const color = change && COLORS[change].COLOR;
+  const color = change && COLORS[change];
 
   const price24HoursAgo = price + dailyChange;
   const dailyChangeDivision = Math.abs(dailyChange / price24HoursAgo);

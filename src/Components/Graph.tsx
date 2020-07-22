@@ -28,7 +28,7 @@ export const Graph = (props: {
   const [points, setScaledPoints] = useState<CanvasPoint[]>();
   const [activePoint, setActivePoint] = useState<CanvasPoint>();
 
-  const canvasRef = useRef<SVGSVGElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   const {
     values,
@@ -42,14 +42,14 @@ export const Graph = (props: {
   } = props;
 
   // Use the active colour when in active state
-  const colors = activePoint ? COLORS.ACTIVE : COLORS[change];
+  const color = activePoint ? COLORS.ACTIVE : COLORS[change];
 
   /**
-   * Set up the graph when canvas loads and whenever `values` changes
+   * Set up the graph when SVG loads and whenever `values` changes
    */
   useEffect(() => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement || !values) {
+    const svgElement = svgRef.current;
+    if (!svgElement || !values) {
       return;
     }
 
@@ -123,7 +123,7 @@ export const Graph = (props: {
           setActiveValue(undefined);
         }
       },
-      canvasElement
+      svgElement
     );
 
     // Unset labels and event listeners on cleanup
@@ -132,16 +132,7 @@ export const Graph = (props: {
       setYLabels(undefined);
       cleanupInteractivityHandlers();
     };
-  }, [
-    values,
-    loading,
-    canvasRef,
-    width,
-    height,
-    period,
-    symbol,
-    setActiveValue,
-  ]);
+  }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
 
   const pointString = points
     ?.map((point) => `${point.canvasX},${point.canvasY}`)
@@ -166,52 +157,42 @@ export const Graph = (props: {
         ))}
         {activePoint && (
           <>
-            <ActiveLine
-              left={activePoint.canvasX}
-              color={colors.COLOR}
-              width={1}
-            />
+            <ActiveLine left={activePoint.canvasX} color={color} width={1} />
             <ActiveCircle
               size={18}
               left={activePoint.canvasX}
               top={activePoint.canvasY}
-              color={colors.COLOR}
+              color={color}
             />
           </>
         )}
-        <svg viewBox={`0 0 ${width} ${height}`} ref={canvasRef}>
+        <svg viewBox={`0 0 ${width} ${height}`} ref={svgRef}>
           <defs>
-            <linearGradient
-              id={`${symbol}-gradient`}
-              x1="0%"
-              y1="0%"
-              x2="0%"
-              y2="100%"
-            >
+            <linearGradient id={symbol} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop
                 offset="0%"
-                style={{ stopColor: colors.COLOR_ALPHA(0.3), stopOpacity: 1 }}
+                style={{ stopColor: color, stopOpacity: 0.5 }}
               />
               <stop
                 offset="100%"
-                style={{ stopColor: "var(--background-color)", stopOpacity: 1 }}
+                style={{ stopColor: color, stopOpacity: 0 }}
               />
             </linearGradient>
           </defs>
-          <polygon
-            fill={`url(#${symbol}-gradient`}
-            points={`
-              0,${height}
-              ${pointString}
-              ${width},${height}
-            `}
-          />
-          <polyline
-            fill="none"
-            stroke={colors.COLOR}
-            stroke-width="2"
-            points={pointString}
-          />
+          {points && (
+            <>
+              <polygon
+                fill={`url(#${symbol}`}
+                points={`0,${height}\n${pointString}\n${width},${height}`}
+              />
+              <polyline
+                fill="none"
+                stroke={color}
+                strokeWidth="2"
+                points={pointString}
+              />
+            </>
+          )}
         </svg>
       </Frame>
       {!loading &&
