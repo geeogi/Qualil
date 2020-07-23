@@ -107,7 +107,18 @@ export const Graph = (props: {
   }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
 
   /**
-   * Mouse/Touch handler
+   * Unset state while loading to prevent stale graph from showing
+   */
+  useEffect(() => {
+    if (loading) {
+      setScaledPoints(undefined);
+      setXLabels(undefined);
+      setYLabels(undefined);
+    }
+  }, [loading]);
+
+  /**
+   * Interaction handler
    * @param activeX
    */
   const handleActiveX = (activeX: number) => {
