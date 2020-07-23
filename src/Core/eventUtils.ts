@@ -64,12 +64,12 @@ export const addInteractivityHandlers = (
   const handleTouchCancel = handleTouchEnd;
 
   // Attach event listeners
-  element.addEventListener("mousemove", handleMouseMove, { passive: true });
-  element.addEventListener("mouseleave", handleMouseLeave, { passive: true });
-  element.addEventListener("touchmove", handleTouchMove, { passive: true });
-  element.addEventListener("touchstart", handleTouchStart, { passive: true });
-  element.addEventListener("touchend", handleTouchEnd, { passive: true });
-  element.addEventListener("touchcancel", handleTouchCancel, { passive: true });
+  element.addEventListener("mousemove", handleMouseMove, { passive: false });
+  element.addEventListener("mouseleave", handleMouseLeave, { passive: false });
+  element.addEventListener("touchmove", handleTouchMove, { passive: false });
+  element.addEventListener("touchstart", handleTouchStart, { passive: false });
+  element.addEventListener("touchend", handleTouchEnd, { passive: false });
+  element.addEventListener("touchcancel", handleTouchCancel, { passive: false });
 
   // Return cleanup
   return () => {
