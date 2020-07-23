@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
 import { ChangeSince24H, CoinInfo } from "../Model/coin";
-import { HistoricalValue, HistoricalData, Period } from "../Model/graph";
+import { CanvasPoint, HistoricalData, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
 import { Graph } from "./Graph";
@@ -19,7 +19,7 @@ export const Asset = (props: {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error>();
   const [historicalData, setHistoricalData] = useState<HistoricalData>();
-  const [activeValue, setActiveValue] = useState<HistoricalValue>();
+  const [activeValue, setActiveValue] = useState<CanvasPoint>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
 
@@ -109,6 +109,7 @@ export const Asset = (props: {
         period={historicalData.period}
         change={change}
         loading={isLoading}
+        activeValue={activeValue}
         setActiveValue={setActiveValue}
       />
       <div className="flex-wrap my8" style={{ width: graphWidth }}>

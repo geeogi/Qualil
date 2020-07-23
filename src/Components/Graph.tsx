@@ -27,12 +27,12 @@ export const Graph = (props: {
   period: Period;
   change: ChangeSince24H;
   symbol: string;
-  setActiveValue: (active: { price: number; unix: number } | undefined) => void;
+  activeValue: CanvasPoint | undefined;
+  setActiveValue: (point: CanvasPoint | undefined) => void;
 }) => {
   const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
   const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
   const [points, setScaledPoints] = useState<CanvasPoint[]>();
-  const [activePoint, setActivePoint] = useState<CanvasPoint>();
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -44,11 +44,12 @@ export const Graph = (props: {
     width,
     height,
     period,
+    activeValue,
     setActiveValue,
   } = props;
 
   // Use the active colour when in active state
-  const color = activePoint ? COLORS.ACTIVE : COLORS[change];
+  const color = activeValue ? COLORS.ACTIVE : COLORS[change];
 
   /**
    * Set up the graph when SVG element exists and whenever `values` changes
@@ -116,11 +117,9 @@ export const Graph = (props: {
       const [canvasPoint] = [...points].sort(
         (a, b) => Math.abs(a.canvasX - activeX) - Math.abs(b.canvasX - activeX)
       );
-      console.log(canvasPoint);
 
       // Set active state
-      setActivePoint(canvasPoint);
-      setActiveValue({ price: canvasPoint.price, unix: canvasPoint.unix });
+      setActiveValue(canvasPoint);
     }
   };
 
@@ -128,7 +127,6 @@ export const Graph = (props: {
    * Unset active value
    */
   const resetActiveX = () => {
-    setActivePoint(undefined);
     setActiveValue(undefined);
   };
 
@@ -149,13 +147,13 @@ export const Graph = (props: {
             left={0}
           />
         ))}
-        {activePoint && (
+        {activeValue && (
           <>
-            <ActiveLine left={activePoint.canvasX} color={color} width={1} />
+            <ActiveLine left={activeValue.canvasX} color={color} width={1} />
             <ActiveCircle
               size={18}
-              left={activePoint.canvasX}
-              top={activePoint.canvasY}
+              left={activeValue.canvasX}
+              top={activeValue.canvasY}
               color={color}
             />
           </>
