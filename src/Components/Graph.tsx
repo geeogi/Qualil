@@ -1,18 +1,22 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
-import { addInteractivityHandlers } from "../Core/eventUtils";
+import {
+  handleMouseMove,
+  handleTouchMove,
+  handleTouchStart,
+} from "../Core/eventUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
 import { CanvasPoint, HistoricalValue, Period } from "../Model/graph";
 import { ActiveCircle } from "./Graph/ActiveCircle";
 import { ActiveLine } from "./Graph/ActiveLine";
+import { Area } from "./Graph/Area";
 import { Frame } from "./Graph/Frame";
 import { Gradient } from "./Graph/Gradient";
 import { HorizontalGridLine } from "./Graph/HorizontalGridLine";
 import { Label } from "./Graph/Label";
-import { Area } from "./Graph/Area";
 import { VerticalGridLine } from "./Graph/VerticalGridLine";
 
 export const Graph = (props: {
@@ -81,6 +85,7 @@ export const Graph = (props: {
     const scaledPoints = points.map((point) => ({
       canvasX: toCanvasX(toGraphX(point.x)),
       canvasY: toCanvasY(toGraphY(point.y)),
+      ...point,
     }));
 
     // Set labels
@@ -99,44 +104,33 @@ export const Graph = (props: {
 
     // Set scaled points
     setScaledPoints(scaledPoints);
-
-    /**
-     * We need to add passive event listeners to achieve best performance on touch devices
-     */
-    const cleanupInteractivityHandlers = addInteractivityHandlers(
-      ({ activeX }) => {
-        if (activeX) {
-          // Scale activeX from screen resolution to [-1,1] clip space
-          const activeClipSpaceX = (activeX / width) * 2 - 1;
-
-          // Find nearest graph point to activeX
-          const [{ x, y, price, unix }] = [...points].sort(
-            (a, b) =>
-              Math.abs(a.x - activeClipSpaceX) -
-              Math.abs(b.x - activeClipSpaceX)
-          );
-
-          // Set active state
-          const canvasX = toCanvasX(toGraphX(x));
-          const canvasY = toCanvasY(toGraphY(y));
-          setActivePoint({ canvasX, canvasY });
-          setActiveValue({ price, unix });
-        } else {
-          // Reset active state
-          setActivePoint(undefined);
-          setActiveValue(undefined);
-        }
-      },
-      svgElement
-    );
-
-    // Unset labels and event listeners on cleanup
-    return () => {
-      setXLabels(undefined);
-      setYLabels(undefined);
-      cleanupInteractivityHandlers();
-    };
   }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
+
+  /**
+   * Mouse/Touch handler
+   * @param activeX
+   */
+  const handleActiveX = (activeX: number) => {
+    if (points) {
+      // Find nearest point to activeX
+      const [canvasPoint] = [...points].sort(
+        (a, b) => Math.abs(a.canvasX - activeX) - Math.abs(b.canvasX - activeX)
+      );
+      console.log(canvasPoint);
+
+      // Set active state
+      setActivePoint(canvasPoint);
+      setActiveValue({ price: canvasPoint.price, unix: canvasPoint.unix });
+    }
+  };
+
+  /**
+   * Unset active value
+   */
+  const resetActiveX = () => {
+    setActivePoint(undefined);
+    setActiveValue(undefined);
+  };
 
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
@@ -166,7 +160,16 @@ export const Graph = (props: {
             />
           </>
         )}
-        <svg viewBox={`0 0 ${width} ${height}`} ref={svgRef}>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          ref={svgRef}
+          onMouseMove={(e) => handleActiveX(handleMouseMove(e).activeX)}
+          onMouseLeave={resetActiveX}
+          onTouchStart={(e) => handleActiveX(handleTouchStart(e).activeX)}
+          onTouchMove={(e) => handleActiveX(handleTouchMove(e).activeX)}
+          onTouchEnd={resetActiveX}
+          onTouchCancel={resetActiveX}
+        >
           <defs>
             <Gradient symbol={symbol} color={color} />
           </defs>
