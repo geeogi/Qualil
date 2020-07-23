@@ -134,6 +134,7 @@ export const Graph = (props: {
     };
   }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
 
+  // Reduce points to SVG points string
   const pointString = points
     ?.map((point) => `${point.canvasX},${point.canvasY}`)
     .join("\n");
