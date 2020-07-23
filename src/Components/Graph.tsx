@@ -172,7 +172,7 @@ export const Graph = (props: {
             <linearGradient id={symbol} x1="0%" y1="0%" x2="0%" y2="100%">
               <stop
                 offset="0%"
-                style={{ stopColor: color, stopOpacity: 0.5 }}
+                style={{ stopColor: color, stopOpacity: 0.55 }}
               />
               <stop
                 offset="100%"
