@@ -6,7 +6,6 @@ export const Label = (props: { text: string; top: number; left: number }) => (
     style={{
       top: props.top,
       left: props.left,
-      background: "var(--translucent-background-color)",
     }}
   >
     {props.text}

@@ -8,7 +8,7 @@ export const Frame = (props: {
   height: number;
 }) => (
   <div
-    className="relative non-select"
+    className="relative"
     style={{ width: props.width + "px", height: props.height + "px" }}
   >
     {props.loading ? <LoadingSpinner /> : props.children}

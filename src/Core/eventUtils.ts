@@ -29,7 +29,7 @@ const setTouchedResetTimer = () => {
 };
 
 /**
- * Set event listeners which will call the callback method with activeX and
+ * Set passive event listeners which will call the callback method with activeX and
  * activeY whenever these values change
  * @param callback
  */
