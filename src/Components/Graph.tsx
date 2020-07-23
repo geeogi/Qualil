@@ -2,10 +2,9 @@ import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
 import {
-  handleMouseMove,
-  handleTouchMove,
-  handleTouchStart,
-} from "../Core/eventUtils";
+  getCoordinatesOfMouseEvent,
+  getCoordinatesOfTouchEvent,
+} from "../Core/domUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
@@ -154,10 +153,10 @@ export const Graph = (props: {
         <svg
           viewBox={`0 0 ${width} ${height}`}
           ref={svgRef}
-          onMouseMove={(e) => handleActiveX(handleMouseMove(e).activeX)}
+          onMouseMove={(e) => handleActiveX(getCoordinatesOfMouseEvent(e).x)}
           onMouseLeave={() => setActiveValue(undefined)}
-          onTouchStart={(e) => handleActiveX(handleTouchStart(e).activeX)}
-          onTouchMove={(e) => handleActiveX(handleTouchMove(e).activeX)}
+          onTouchStart={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
+          onTouchMove={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
           onTouchEnd={() => setActiveValue(undefined)}
           onTouchCancel={() => setActiveValue(undefined)}
         >

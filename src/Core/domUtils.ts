@@ -2,7 +2,9 @@
  * Method: Get the coordinates of a mouse event
  * @param {*} e
  */
-export const getCoordinatesOfMouseEvent = (e: MouseEvent) => {
+export const getCoordinatesOfMouseEvent = (
+  e: React.MouseEvent<SVGSVGElement, MouseEvent>
+) => {
   const { target } = (e as any) as { target: HTMLCanvasElement };
   if (!target) {
     throw new Error("No event target found");
@@ -17,7 +19,9 @@ export const getCoordinatesOfMouseEvent = (e: MouseEvent) => {
  * Method: Get the coordinates of a touch event
  * @param {*} e
  */
-export const getCoordinatesOfTouchEvent = (e: TouchEvent) => {
+export const getCoordinatesOfTouchEvent = (
+  e: React.TouchEvent<SVGSVGElement>
+) => {
   const { target } = (e as any) as { target: HTMLCanvasElement };
   if (!target) {
     throw new Error("No event target found");
