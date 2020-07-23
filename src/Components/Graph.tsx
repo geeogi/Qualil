@@ -123,13 +123,6 @@ export const Graph = (props: {
     }
   };
 
-  /**
-   * Unset active value
-   */
-  const resetActiveX = () => {
-    setActiveValue(undefined);
-  };
-
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
       <Frame width={width} height={height} loading={loading}>
@@ -162,11 +155,11 @@ export const Graph = (props: {
           viewBox={`0 0 ${width} ${height}`}
           ref={svgRef}
           onMouseMove={(e) => handleActiveX(handleMouseMove(e).activeX)}
-          onMouseLeave={resetActiveX}
+          onMouseLeave={() => setActiveValue(undefined)}
           onTouchStart={(e) => handleActiveX(handleTouchStart(e).activeX)}
           onTouchMove={(e) => handleActiveX(handleTouchMove(e).activeX)}
-          onTouchEnd={resetActiveX}
-          onTouchCancel={resetActiveX}
+          onTouchEnd={() => setActiveValue(undefined)}
+          onTouchCancel={() => setActiveValue(undefined)}
         >
           <defs>
             <Gradient symbol={symbol} color={color} />
