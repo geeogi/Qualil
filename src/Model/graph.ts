@@ -30,4 +30,11 @@ export type HistoricalData = {
   values: HistoricalValue[];
 };
 
-export type CanvasPoint = { canvasX: number; canvasY: number };
+export type CanvasPoint = {
+  canvasX: number;
+  canvasY: number;
+  x: number;
+  y: number;
+  price: number;
+  unix: number;
+};

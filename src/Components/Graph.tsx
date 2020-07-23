@@ -1,16 +1,19 @@
 import dayjs from "dayjs";
 import React, { useEffect, useRef, useState } from "react";
 import { COLORS } from "../Config/colors";
-import { scale2DCanvas } from "../Core/canvasUtils";
-import { drawLine, fillPath, getGradientMethod } from "../Core/drawUtils";
-import { addInteractivityHandlers } from "../Core/eventUtils";
+import {
+  getCoordinatesOfMouseEvent,
+  getCoordinatesOfTouchEvent,
+} from "../Core/domUtils";
 import { getGraphConfig } from "../Core/graphUtils";
 import { numberWithSignificantDigits } from "../Core/numberUtils";
 import { ChangeSince24H } from "../Model/coin";
 import { CanvasPoint, HistoricalValue, Period } from "../Model/graph";
 import { ActiveCircle } from "./Graph/ActiveCircle";
 import { ActiveLine } from "./Graph/ActiveLine";
+import { Area } from "./Graph/Area";
 import { Frame } from "./Graph/Frame";
+import { Gradient } from "./Graph/Gradient";
 import { HorizontalGridLine } from "./Graph/HorizontalGridLine";
 import { Label } from "./Graph/Label";
 import { VerticalGridLine } from "./Graph/VerticalGridLine";
@@ -23,14 +26,14 @@ export const Graph = (props: {
   period: Period;
   change: ChangeSince24H;
   symbol: string;
-  setActiveValue: (active: { price: number; unix: number } | undefined) => void;
+  activeValue: CanvasPoint | undefined;
+  setActiveValue: (point: CanvasPoint | undefined) => void;
 }) => {
   const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
   const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
   const [points, setScaledPoints] = useState<CanvasPoint[]>();
-  const [activePoint, setActivePoint] = useState<CanvasPoint>();
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const svgRef = useRef<SVGSVGElement>(null);
 
   const {
     values,
@@ -40,18 +43,19 @@ export const Graph = (props: {
     width,
     height,
     period,
+    activeValue,
     setActiveValue,
   } = props;
 
   // Use the active colour when in active state
-  const colors = activePoint ? COLORS.ACTIVE : COLORS[change];
+  const color = activeValue ? COLORS.ACTIVE : COLORS[change];
 
   /**
-   * Set up the graph when canvas loads and whenever `values` changes
+   * Set up the graph when SVG element exists and whenever `values` changes
    */
   useEffect(() => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement || !values) {
+    const svgElement = svgRef.current;
+    if (!svgElement || !values) {
       return;
     }
 
@@ -69,20 +73,11 @@ export const Graph = (props: {
       scaleUnixX,
     } = getGraphConfig({ values: sample, period });
 
-    // Retrieve canvas context
-    const ctx = canvasElement.getContext("2d");
-    if (!ctx) {
-      throw new Error("Unable to retrieve 2D context");
-    }
-
-    // Scale the canvas for retina displays
-    scale2DCanvas(ctx, canvasElement);
-
-    // Utils to convert from clip space [-1,1] to graph coordinates
+    // Utils to convert from clip space [-1,1] to graph coordinates [x,y]
     const toGraphX = (x: number) => ((x + 1) / 2) * width;
     const toGraphY = (y: number) => ((y + 1) / 2.2) * height + 12;
 
-    // Utils to convert from graph coordinates to canvas pixels
+    // Utils to convert from graph coordinates [x,y] to canvas pixels [x,^y]
     const toCanvasX = (graphX: number) => graphX;
     const toCanvasY = (graphY: number) => height - graphY;
 
@@ -90,6 +85,7 @@ export const Graph = (props: {
     const scaledPoints = points.map((point) => ({
       canvasX: toCanvasX(toGraphX(point.x)),
       canvasY: toCanvasY(toGraphY(point.y)),
+      ...point,
     }));
 
     // Set labels
@@ -108,85 +104,34 @@ export const Graph = (props: {
 
     // Set scaled points
     setScaledPoints(scaledPoints);
-
-    // Add interactivity handlers
-    const cleanupInteractivityHandlers = addInteractivityHandlers(
-      ({ activeX }) => {
-        if (activeX) {
-          // Scale activeX to [-1,1] clip space
-          const activeClipSpaceX = (activeX / width) * 2 - 1;
-
-          // Find nearest point to activeX
-          const [{ x, y, price, unix }] = [...points].sort(
-            (a, b) =>
-              Math.abs(a.x - activeClipSpaceX) -
-              Math.abs(b.x - activeClipSpaceX)
-          );
-
-          // Set active state
-          const canvasX = toCanvasX(toGraphX(x));
-          const canvasY = toCanvasY(toGraphY(y));
-          setActivePoint({ canvasX, canvasY });
-          setActiveValue({ price, unix });
-        } else {
-          // Reset active state
-          setActivePoint(undefined);
-          setActiveValue(undefined);
-        }
-      },
-      canvasElement
-    );
-
-    // Unset labels and event listeners on cleanup
-    return () => {
-      setXLabels(undefined);
-      setYLabels(undefined);
-      cleanupInteractivityHandlers();
-    };
-  }, [
-    values,
-    loading,
-    canvasRef,
-    width,
-    height,
-    period,
-    symbol,
-    setActiveValue,
-  ]);
+  }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
 
   /**
-   * Draw the graph on load and when colors change
+   * Unset state while loading to prevent stale graph from showing
    */
   useEffect(() => {
-    const canvasElement = canvasRef.current;
-    if (!canvasElement || !points) {
-      return;
+    if (loading) {
+      setScaledPoints(undefined);
+      setXLabels(undefined);
+      setYLabels(undefined);
     }
+  }, [loading]);
 
-    // Retrieve canvas context
-    const ctx = canvasElement.getContext("2d");
-    if (!ctx) {
-      throw new Error("Unable to retrieve 2D context");
+  /**
+   * Interaction handler
+   * @param activeX
+   */
+  const handleActiveX = (activeX: number) => {
+    if (points) {
+      // Find nearest point to activeX
+      const [canvasPoint] = [...points].sort(
+        (a, b) => Math.abs(a.canvasX - activeX) - Math.abs(b.canvasX - activeX)
+      );
+
+      // Set active state
+      setActiveValue(canvasPoint);
     }
-
-    // Clear graph
-    ctx.clearRect(0, 0, width, height);
-
-    // Configure gradient
-    const getGradient = getGradientMethod(ctx, 0, height);
-
-    // Draw primary block
-    const firstPoint = { canvasX: 0, canvasY: height };
-    const lastPoint = { canvasX: width, canvasY: height };
-    const path = [firstPoint, ...points, lastPoint];
-    const topColor = colors.COLOR_ALPHA(0.6);
-    const bottomColor = colors.COLOR_ALPHA(0);
-    const gradient = getGradient(topColor, bottomColor);
-    fillPath(ctx, path, gradient);
-
-    // Draw primary line
-    drawLine(ctx, points, colors.COLOR, 2);
-  }, [colors, points, width, height]);
+  };
 
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
@@ -205,22 +150,40 @@ export const Graph = (props: {
             left={0}
           />
         ))}
-        {activePoint && (
+        {activeValue && (
           <>
-            <ActiveLine
-              left={activePoint.canvasX}
-              color={colors.COLOR}
-              width={1}
-            />
+            <ActiveLine left={activeValue.canvasX} color={color} width={1} />
             <ActiveCircle
               size={18}
-              left={activePoint.canvasX}
-              top={activePoint.canvasY}
-              color={colors.COLOR}
+              left={activeValue.canvasX}
+              top={activeValue.canvasY}
+              color={color}
             />
           </>
         )}
-        <canvas ref={canvasRef}></canvas>
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          ref={svgRef}
+          onMouseMove={(e) => handleActiveX(getCoordinatesOfMouseEvent(e).x)}
+          onMouseLeave={() => setActiveValue(undefined)}
+          onTouchStart={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
+          onTouchMove={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
+          onTouchEnd={() => setActiveValue(undefined)}
+          onTouchCancel={() => setActiveValue(undefined)}
+        >
+          <defs>
+            <Gradient symbol={symbol} color={color} />
+          </defs>
+          {points && (
+            <Area
+              symbol={symbol}
+              height={height}
+              width={width}
+              points={points}
+              color={color}
+            />
+          )}
+        </svg>
       </Frame>
       {!loading &&
         xLabels?.map(({ unix, left }) => (

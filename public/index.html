@@ -80,11 +80,8 @@
           monospace;
       }
 
-      canvas {
-        width: 100%;
-        height: 100%;
+      svg {
         z-index: 1;
-        user-select: none;
       }
 
       label {
@@ -178,8 +175,9 @@
         height: 100%;
       }
 
-      .non-select {
+      .non-select * {
         user-select: none;
+        -webkit-user-select: none;
       }
 
       .relative {
@@ -200,7 +198,6 @@
         position: absolute;
         z-index: 1;
         pointer-events: none;
-        user-select: none;
         touch-action: none;
       }
 
@@ -210,7 +207,6 @@
         border: solid 2px var(--background-color);
         z-index: 2;
         pointer-events: none;
-        user-select: none;
         touch-action: none;
       }
 
@@ -219,7 +215,7 @@
         height: 1px;
         position: absolute;
         z-index: -1;
-        user-select: none;
+        border-top: solid 1px var(--axis-color);
       }
 
       .VerticalGridLine {
@@ -227,7 +223,7 @@
         width: 1px;
         position: absolute;
         z-index: -1;
-        user-select: none;
+        border-left: solid 1px var(--axis-color);
       }
 
       .Label {
@@ -236,8 +232,8 @@
         margin-top: 1px;
         border-radius: 0 3px 3px 0;
         pointer-events: none;
-        user-select: none;
         touch-action: none;
+        background: var(--translucent-background-color);
       }
 
       .Title {
