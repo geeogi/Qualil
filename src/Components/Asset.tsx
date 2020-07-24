@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { getCoinHistoricalData, getCoinInfo } from "../API/fetch";
 import { numberToString } from "../Core/numberUtils";
-import { ChangeSince24H, CoinInfo } from "../Model/coin";
+import { CoinInfo } from "../Model/coin";
 import { CanvasPoint, HistoricalData, Period } from "../Model/graph";
 import { Attribute } from "./Asset/Attribute";
 import { Title } from "./Asset/Title";
@@ -16,9 +16,8 @@ export const Asset = (props: {
   period: Period;
 }) => {
   const [info, setInfo] = useState<CoinInfo>();
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<Error>();
   const [historicalData, setHistoricalData] = useState<HistoricalData>();
+  const [error, setError] = useState<Error>();
   const [activeValue, setActiveValue] = useState<CanvasPoint>();
 
   const { coin, period, graphWidth, graphHeight, margin } = props;
@@ -27,7 +26,8 @@ export const Asset = (props: {
    * Fetch and set coin data on load and whenever `period` changes
    */
   useEffect(() => {
-    setIsLoading(true);
+    setHistoricalData(undefined);
+    setActiveValue(undefined);
     const abortController = new AbortController();
     const { signal } = abortController;
     Promise.all([
@@ -37,12 +37,10 @@ export const Asset = (props: {
       .then(([info, values]) => {
         setHistoricalData({ period, values });
         setInfo(info);
-        setIsLoading(false);
       })
       .catch((e) => {
         if (e.name !== "AbortError") {
           setError(e);
-          setIsLoading(false);
         }
       });
 
@@ -58,7 +56,7 @@ export const Asset = (props: {
   /**
    * Render fixed size div while component is loading or in error state
    */
-  if (!info || !historicalData || error) {
+  if (!info || error) {
     return (
       <div
         className="m16 center-content"
@@ -84,10 +82,6 @@ export const Asset = (props: {
   const ath = info.market_data.ath["usd"];
   const atl = info.market_data.atl["usd"];
   const totalVolume = info.market_data.total_volume["usd"];
-  const { values } = historicalData;
-  const positivePeriod = values[0].price < values[values.length - 1].price;
-  const { POSITIVE, NEGATIVE } = ChangeSince24H;
-  const change = positivePeriod ? POSITIVE : NEGATIVE;
 
   return (
     <div style={{ margin: margin + "px" }}>
@@ -103,12 +97,10 @@ export const Asset = (props: {
       />
       <Graph
         symbol={symbol}
-        values={values}
+        values={historicalData?.values}
+        period={historicalData?.period}
         width={graphWidth}
         height={graphHeight}
-        period={historicalData.period}
-        change={change}
-        loading={isLoading}
         activeValue={activeValue}
         setActiveValue={setActiveValue}
       />

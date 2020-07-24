@@ -1,5 +1,5 @@
 import dayjs from "dayjs";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useState } from "react";
 import { COLORS } from "../Config/colors";
 import {
   getCoordinatesOfMouseEvent,
@@ -20,27 +20,18 @@ import { VerticalGridLine } from "./Graph/VerticalGridLine";
 
 export const Graph = (props: {
   values?: HistoricalValue[];
-  loading?: boolean;
+  period?: Period;
   width: number;
   height: number;
-  period: Period;
-  change: ChangeSince24H;
   symbol: string;
   activeValue: CanvasPoint | undefined;
   setActiveValue: (point: CanvasPoint | undefined) => void;
 }) => {
-  const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
-  const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
-  const [points, setScaledPoints] = useState<CanvasPoint[]>();
   const [touched, setTouched] = useState(false);
-
-  const svgRef = useRef<SVGSVGElement>(null);
 
   const {
     values,
-    change,
     symbol,
-    loading,
     width,
     height,
     period,
@@ -48,84 +39,70 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
+  if (!values || !period) {
+    return (
+      <div className="relative non-select" style={{ height: height + 24 }}>
+        <Frame width={width} height={height} loading={true}></Frame>
+      </div>
+    );
+  }
+
+  // Calculate change direction
+  const positivePeriod = values[0].price < values[values.length - 1].price;
+  const { POSITIVE, NEGATIVE } = ChangeSince24H;
+  const change = positivePeriod ? POSITIVE : NEGATIVE;
+
   // Use the active colour when in active state
   const color = activeValue ? COLORS.ACTIVE : COLORS[change];
 
-  /**
-   * Set up the graph when SVG element exists and whenever `values` changes
-   */
-  useEffect(() => {
-    const svgElement = svgRef.current;
-    if (!svgElement || !values) {
-      return;
-    }
+  // Sample values to achieve ~1 point per pixel
+  const sample = values.filter(
+    (_, index) => index % Math.ceil(values.length / width) === 0
+  );
 
-    // Sample values to achieve ~1 point per pixel
-    const sample = values.filter(
-      (_, index) => index % Math.ceil(values.length / width) === 0
-    );
+  // Configure graph values
+  const {
+    points,
+    dateLabels,
+    priceLabels,
+    scalePriceY,
+    scaleUnixX,
+  } = getGraphConfig({ values: sample, period });
 
-    // Configure graph values
-    const {
-      points,
-      dateLabels,
-      priceLabels,
-      scalePriceY,
-      scaleUnixX,
-    } = getGraphConfig({ values: sample, period });
+  // Utils to convert from clip space [-1,1] to graph coordinates [x,y]
+  const toGraphX = (x: number) => ((x + 1) / 2) * width;
+  const toGraphY = (y: number) => ((y + 1) / 2.2) * height + 12;
 
-    // Utils to convert from clip space [-1,1] to graph coordinates [x,y]
-    const toGraphX = (x: number) => ((x + 1) / 2) * width;
-    const toGraphY = (y: number) => ((y + 1) / 2.2) * height + 12;
+  // Utils to convert from graph coordinates [x,y] to canvas pixels [x,^y]
+  const toCanvasX = (graphX: number) => graphX;
+  const toCanvasY = (graphY: number) => height - graphY;
 
-    // Utils to convert from graph coordinates [x,y] to canvas pixels [x,^y]
-    const toCanvasX = (graphX: number) => graphX;
-    const toCanvasY = (graphY: number) => height - graphY;
+  // Scale graph coordinates from clip space [-1,1] to screen resolution
+  const scaledPoints = points.map((point) => ({
+    canvasX: toCanvasX(toGraphX(point.x)),
+    canvasY: toCanvasY(toGraphY(point.y)),
+    ...point,
+  }));
 
-    // Scale graph coordinates from clip space [-1,1] to screen resolution
-    const scaledPoints = points.map((point) => ({
-      canvasX: toCanvasX(toGraphX(point.x)),
-      canvasY: toCanvasY(toGraphY(point.y)),
-      ...point,
-    }));
+  // Define labels
+  const yLabels = priceLabels.map((price) => ({
+    price,
+    top: toCanvasY(toGraphY(scalePriceY(price))),
+  }));
 
-    // Set labels
-    setYLabels(
-      priceLabels.map((price) => ({
-        price,
-        top: toCanvasY(toGraphY(scalePriceY(price))),
-      }))
-    );
-    setXLabels(
-      dateLabels.map((unix) => ({
-        unix,
-        left: toCanvasX(toGraphX(scaleUnixX(unix))),
-      }))
-    );
-
-    // Set scaled points
-    setScaledPoints(scaledPoints);
-  }, [values, loading, svgRef, width, height, period, symbol, setActiveValue]);
-
-  /**
-   * Unset state while loading to prevent stale graph from showing
-   */
-  useEffect(() => {
-    if (loading) {
-      setScaledPoints(undefined);
-      setXLabels(undefined);
-      setYLabels(undefined);
-    }
-  }, [loading]);
+  const xLabels = dateLabels.map((unix) => ({
+    unix,
+    left: toCanvasX(toGraphX(scaleUnixX(unix))),
+  }));
 
   /**
    * Interaction handler
    * @param activeX
    */
   const handleActiveX = (activeX: number) => {
-    if (points) {
+    if (scaledPoints) {
       // Find nearest point to activeX
-      const [canvasPoint] = [...points].sort(
+      const [canvasPoint] = [...scaledPoints].sort(
         (a, b) => Math.abs(a.canvasX - activeX) - Math.abs(b.canvasX - activeX)
       );
 
@@ -158,12 +135,11 @@ export const Graph = (props: {
    */
   const handleLeave = () => {
     setActiveValue(undefined);
-    setTouched(false);
   };
 
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
-      <Frame width={width} height={height} loading={loading}>
+      <Frame width={width} height={height}>
         {xLabels?.map(({ left, unix }) => (
           <VerticalGridLine left={left} key={`${symbol}-${unix.toString()}`} />
         ))}
@@ -191,7 +167,6 @@ export const Graph = (props: {
         )}
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          ref={svgRef}
           onMouseMove={handleMouse}
           onTouchStart={handleTouch}
           onTouchMove={handleTouch}
@@ -207,21 +182,20 @@ export const Graph = (props: {
               symbol={symbol}
               height={height}
               width={width}
-              points={points}
+              points={scaledPoints}
               color={color}
             />
           )}
         </svg>
       </Frame>
-      {!loading &&
-        xLabels?.map(({ unix, left }) => (
-          <Label
-            key={`${symbol}-${unix.toString()}`}
-            text={dayjs(unix).format(period.labelFormat)}
-            top={height}
-            left={left}
-          />
-        ))}
+      {xLabels?.map(({ unix, left }) => (
+        <Label
+          key={`${symbol}-${unix.toString()}`}
+          text={dayjs(unix).format(period.labelFormat)}
+          top={height}
+          left={left}
+        />
+      ))}
     </div>
   );
 };
