@@ -1,4 +1,4 @@
-import { GraphPoints, Period } from "../Model/graph";
+import { GraphPoint, Period } from "../Model/graph";
 import { getDateLabels, getPriceLabels } from "./labelUtils";
 import { getScaleMethod } from "./numberUtils";
 
@@ -39,7 +39,7 @@ export const getGraphConfig = (args: {
   const scalePriceY = getScaleMethod(minPrice, maxPrice, -1, 1);
 
   // Calculate point coordinates [-1,1]
-  const points: GraphPoints = values.map((value) => ({
+  const points: GraphPoint[] = values.map((value) => ({
     x: scaleUnixX(value.unix),
     y: scalePriceY(value.price),
     price: value.price,

@@ -1,11 +1,16 @@
 import { OpUnitType } from "dayjs";
 
-export type GraphPoints = {
+export type GraphPoint = {
   x: number;
   y: number;
   price: number;
   unix: number;
-}[];
+};
+
+export interface CanvasPoint extends GraphPoint {
+  canvasX: number;
+  canvasY: number;
+}
 
 export type Period = {
   title: string;
@@ -28,13 +33,4 @@ export type HistoricalValue = {
 export type HistoricalData = {
   period: Period;
   values: HistoricalValue[];
-};
-
-export type CanvasPoint = {
-  canvasX: number;
-  canvasY: number;
-  x: number;
-  y: number;
-  price: number;
-  unix: number;
 };
