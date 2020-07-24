@@ -32,6 +32,7 @@ export const Graph = (props: {
   const [xLabels, setXLabels] = useState<{ unix: number; left: number }[]>();
   const [yLabels, setYLabels] = useState<{ price: number; top: number }[]>();
   const [points, setScaledPoints] = useState<CanvasPoint[]>();
+  const [touched, setTouched] = useState(false);
 
   const svgRef = useRef<SVGSVGElement>(null);
 
@@ -133,6 +134,33 @@ export const Graph = (props: {
     }
   };
 
+  /**
+   * Touch handler: `touched` state prevents double firing on touch devices
+   */
+  const handleTouch = (e: React.TouchEvent<SVGSVGElement>) => {
+    if (!touched) {
+      setTouched(true);
+    }
+    handleActiveX(getCoordinatesOfTouchEvent(e).x);
+  };
+
+  /**
+   * Mouse handler
+   */
+  const handleMouse = (e: React.MouseEvent<SVGSVGElement>) => {
+    if (!touched) {
+      handleActiveX(getCoordinatesOfMouseEvent(e).x);
+    }
+  };
+
+  /**
+   * Leave handler
+   */
+  const handleLeave = () => {
+    setActiveValue(undefined);
+    setTouched(false);
+  };
+
   return (
     <div className="relative non-select" style={{ height: height + 24 }}>
       <Frame width={width} height={height} loading={loading}>
@@ -164,12 +192,12 @@ export const Graph = (props: {
         <svg
           viewBox={`0 0 ${width} ${height}`}
           ref={svgRef}
-          onMouseMove={(e) => handleActiveX(getCoordinatesOfMouseEvent(e).x)}
-          onMouseLeave={() => setActiveValue(undefined)}
-          onTouchStart={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
-          onTouchMove={(e) => handleActiveX(getCoordinatesOfTouchEvent(e).x)}
-          onTouchEnd={() => setActiveValue(undefined)}
-          onTouchCancel={() => setActiveValue(undefined)}
+          onMouseMove={handleMouse}
+          onTouchStart={handleTouch}
+          onTouchMove={handleTouch}
+          onMouseLeave={handleLeave}
+          onTouchEnd={handleLeave}
+          onTouchCancel={handleLeave}
         >
           <defs>
             <Gradient symbol={symbol} color={color} />
