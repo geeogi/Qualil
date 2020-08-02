@@ -40,26 +40,17 @@ export const Footer = () => {
   return (
     <footer>
       <div className="p32">
-        <div
-          className="flex"
-          style={{ justifyContent: "space-between", alignItems: "center" }}
-        >
-          <div>
-            <h2 className="ma0">Powered by CoinGecko.</h2>
-            <p className="ma0 my8">
-              Qualil is a cryptocurrency analytics platform powered by
-              CoinGecko. See the <a href="https://github.com/geeogi/Qualil">source code</a>.
-            </p>
-            <div className="my16">
-              <Button disabled={!isLight} onClick={() => setIsLight(false)}>
-                Dark
-              </Button>
-              <Button disabled={isLight} onClick={() => setIsLight(true)}>
-                Light
-              </Button>
-            </div>
-          </div>
-          <div className="Icon">Q</div>
+        <h2 className="ma0">Powered by CoinGecko.</h2>
+        <p className="ma0 my8">
+          Qualil is a cryptocurrency analytics platform powered by CoinGecko.
+        </p>
+        <div className="my16">
+          <Button disabled={!isLight} onClick={() => setIsLight(false)}>
+            Dark
+          </Button>
+          <Button disabled={isLight} onClick={() => setIsLight(true)}>
+            Light
+          </Button>
         </div>
       </div>
     </footer>

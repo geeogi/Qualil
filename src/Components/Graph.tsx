@@ -39,6 +39,9 @@ export const Graph = (props: {
     setActiveValue,
   } = props;
 
+  /**
+   * Show loading spinner if either values or period is undefined
+   */
   if (!values || !period) {
     return (
       <div className="relative non-select" style={{ height: height + 24 }}>

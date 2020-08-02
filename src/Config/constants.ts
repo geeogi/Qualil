@@ -43,8 +43,8 @@ export const PERIODS: Period[] = [
     value: "90",
     days: 90,
     title: "3m",
-    step: { multiplier: 1, unit: "M", max: 3 },
-    labelFormat: "MMM",
+    step: { multiplier: 3, unit: "w", max: 3 },
+    labelFormat: "D MMM",
     scrubFormat: "HH:mm D MMM",
   },
   {
