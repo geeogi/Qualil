@@ -2,10 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button } from "./Button";
 
 export const Footer = () => {
-  const userPrefersDarkMode =
-    window.matchMedia &&
-    window.matchMedia("(prefers-color-scheme: dark)").matches;
-  const [isLight, setIsLight] = useState(!userPrefersDarkMode);
+  const [isLight, setIsLight] = useState(false);
 
   useEffect(() => {
     if (isLight) {
