@@ -6,12 +6,12 @@ export const UNIX_HOUR = 3600000;
 export const COINS = [
   "bitcoin",
   "ethereum",
-  "tether",
+  "polkadot",
   "ripple",
   "bitcoin-cash",
-  "bitcoin-cash-sv",
+  "aave",
   "litecoin",
-  "cardano",
+  "chainlink",
   "binancecoin",
 ];
 export const PERIODS: Period[] = [
