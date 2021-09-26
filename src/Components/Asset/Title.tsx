@@ -15,16 +15,8 @@ export const Title = (props: {
   period?: Period;
   active?: boolean;
 }) => {
-  const {
-    name,
-    price,
-    image,
-    dailyChange,
-    unix,
-    period,
-    active,
-    symbol,
-  } = props;
+  const { name, price, image, dailyChange, unix, period, active, symbol } =
+    props;
 
   const { POSITIVE, NEGATIVE } = ChangeSince24H;
   const change = dailyChange >= 0 ? POSITIVE : NEGATIVE;
@@ -51,7 +43,7 @@ export const Title = (props: {
           height="33px"
         ></img>
         <h2>
-          {window.innerWidth < 1000 ? symbol : name} ${numberToString(price)}
+          {symbol} ${numberToString(price)}
         </h2>
       </div>
       <div style={{ marginLeft: "auto", textAlign: "right" }}>

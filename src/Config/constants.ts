@@ -7,12 +7,12 @@ export const COINS = [
   "bitcoin",
   "ethereum",
   "polkadot",
-  "ripple",
-  "bitcoin-cash",
+  "solana",
+  "dogecoin",
   "aave",
-  "litecoin",
+  "uniswap",
   "chainlink",
-  "binancecoin",
+  "yield-guild-games",
 ];
 export const PERIODS: Period[] = [
   {
